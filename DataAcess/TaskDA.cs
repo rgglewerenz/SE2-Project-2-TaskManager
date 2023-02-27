@@ -68,12 +68,8 @@ namespace DataAcess
                         new TaskRecurrenceModal()
                         {
                             FirstOccurrance = task.recurrenceOptions.FirstOccurrance,
-                            IsRecurring = task.recurrenceOptions.IsRecurring,
-                            IsRecurringBiWeekly = task.recurrenceOptions.IsRecurringBiWeekly,
-                            IsRecurringMonthly = task.recurrenceOptions.IsRecurringMonthly,
-                            IsRecurringWeekly = task.recurrenceOptions.IsRecurringWeekly,
-                            MonthlyRecurringDays = task.recurrenceOptions.MonthlyRecurringDays,
-                            WeeklyRecurringDays = task.recurrenceOptions.WeeklyRecurringDays
+                            RecurringDays = task.recurrenceOptions.RecurringDays,
+                            RecurringType = task.recurrenceOptions.RecurringType,
                         },
                         userID);
             else
@@ -146,14 +142,9 @@ namespace DataAcess
                 recurrenceOptions = new TaskRecurrenceTransferModal()
                 {
                     FirstOccurrance = reccurrence.FirstOccurrance,
-                    IsRecurring = reccurrence.IsRecurring,
-                    IsRecurringBiWeekly = reccurrence.IsRecurringBiWeekly,
-                    IsRecurringMonthly = reccurrence.IsRecurringMonthly,
-                    IsRecurringWeekly = reccurrence.IsRecurringWeekly,
-                    TaskID = task.TaskID,
-                    TaskRecurrenceMapID = reccurrence.TaskRecurrenceMapID,
-                    WeeklyRecurringDays = reccurrence.WeeklyRecurringDays,
-                    MonthlyRecurringDays = reccurrence.MonthlyRecurringDays,
+                    RecurringDays = reccurrence.RecurringDays,
+                    RecurringType= reccurrence.RecurringType,
+                    TaskID = task.TaskID
                 }
             }).ToList();
             
@@ -212,12 +203,8 @@ namespace DataAcess
                         {
                             TaskID = task.recurrenceOptions.TaskID,
                             FirstOccurrance = task.recurrenceOptions.FirstOccurrance,
-                            IsRecurring = task.recurrenceOptions.IsRecurring,
-                            IsRecurringBiWeekly = task.recurrenceOptions.IsRecurringBiWeekly,
-                            IsRecurringMonthly = task.recurrenceOptions.IsRecurringMonthly,
-                            IsRecurringWeekly = task.recurrenceOptions.IsRecurringWeekly,
-                            MonthlyRecurringDays = task.recurrenceOptions.MonthlyRecurringDays,
-                            WeeklyRecurringDays = task.recurrenceOptions.WeeklyRecurringDays
+                            RecurringDays = task.recurrenceOptions.RecurringDays,
+                            RecurringType = task.recurrenceOptions.RecurringType
                         },
                         userID);
             else

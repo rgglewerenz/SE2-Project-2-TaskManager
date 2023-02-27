@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DatabaseEnums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +11,8 @@ namespace DTO
     {
         public int TaskRecurrenceMapID { get; set; }
         public int TaskID { get; set;}
-        public bool IsRecurring { get; set; }
-        public bool IsRecurringWeekly { get; set; }
-        public bool IsRecurringBiWeekly { get; set; }
-        public bool IsRecurringMonthly { get; set; }
-        public string? MonthlyRecurringDays { get; set; }
-        public string? WeeklyRecurringDays { get; set; }
+        public DatabaseEnums.RecurrentTypes RecurringType { get; set; } = RecurrentTypes.Never;
+        public string? RecurringDays { get; set; }
         public DateTime? FirstOccurrance { get; set; }
     }
 }

@@ -1,0 +1,92 @@
+﻿<h3>TaskForm</h3>
+
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+	<h4>@alertMessage</h4>
+}
+
+<EditForm Model="modal" OnValidSubmit="Submit">
+	<div class="form-group">
+		<label>Title</label>
+		<input type="text" placeholder="Enter Title Here" @bind=modal.Title />
+	</div>
+	<div class="form-group">
+		<label>Description</label>
+		<input type="text" placeholder="Enter Description Here" @bind=modal.Description />
+	</div>
+	<div class="form-group">
+		<label>Start Date</label>
+		<InputDateTime @bind-Value="modal.recurrenceOptions.FirstOccurrance">
+		</InputDateTime>
+	</div>
+
+	<div class="form-group">
+		<label>Recurring Settings</label>
+		<br/>
+		<label>Is Recurring</label>
+		<InputCheckbox @bind-Value="IsRecurring"></InputCheckbox>
+
+		@if (IsRecurring)
+		{
+			<div>
+				<label>Recurring Options</label>
+				<select @bind=modal.recurrenceOptions.RecurringType>
+					<option value="@DatabaseEnums.RecurrentTypes.Daily">Daily</option>
+					<option value="@DatabaseEnums.RecurrentTypes.Monthly">Monthly</option>
+					<option value="@DatabaseEnums.RecurrentTypes.Weekly">Weekly</option>
+					<option value="@DatabaseEnums.RecurrentTypes.BiWeekly">BiWeekly</option>
+				</select>
+
+			@if (modal.recurrenceOptions.RecurringType == DatabaseEnums.RecurrentTypes.Monthly){
+				<div>
+					Monthly	
+				</div>
+			}
+
+				@if (modal.recurrenceOptions.RecurringType == DatabaseEnums.RecurrentTypes.BiWeekly 
+					||
+						modal.recurrenceOptions.RecurringType == DatabaseEnums.RecurrentTypes.Weekly
+						)
+				{
+					<div>
+						Weekly
+					</div>
+				}
+			</div>
+		}
+	</div>
+
+	<button type="submit">Enter</button>
+</EditForm>
+
+
+@code {
+	private DTO.TaskTransferModal modal = new DTO.TaskTransferModal(){
+		recurrenceOptions = new DTO.TaskRecurrenceTransferModal(){
+			FirstOccurrance = DateTime.Now
+		}
+	};
+
+	private bool IsRecurring {
+		get => modal.recurrenceOptions.RecurringType != DatabaseEnums.RecurrentTypes.Never;
+		set {
+			if ((modal.recurrenceOptions?.RecurringType == DatabaseEnums.RecurrentTypes.Never
+				&& !value) 
+			|| (modal.recurrenceOptions?.RecurringType != DatabaseEnums.RecurrentTypes.Never 
+				&& value)) return;
+			if(value)
+				modal.recurrenceOptions.RecurringType = DatabaseEnums.RecurrentTypes.Daily;
+			else
+				modal.recurrenceOptions.RecurringType = DatabaseEnums.RecurrentTypes.Never;
+
+		}
+	}
+
+	private string alertMessage = "";
+
+	private async Task Submit(){
+		alertMessage = modal.recurrenceOptions.FirstOccurrance?.ToString("MM/dd/yyyy hh:mm:ss");
+	}
+
+
+}

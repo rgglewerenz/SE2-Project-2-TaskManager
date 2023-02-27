@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAcess", "DataAcess\Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseBAL", "DatabaseBAL\DatabaseBAL.csproj", "{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseEnums", "DatabaseEnums\DatabaseEnums.csproj", "{8487BF12-2092-4753-9519-4C2B114BC7F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8487BF12-2092-4753-9519-4C2B114BC7F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8487BF12-2092-4753-9519-4C2B114BC7F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8487BF12-2092-4753-9519-4C2B114BC7F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8487BF12-2092-4753-9519-4C2B114BC7F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

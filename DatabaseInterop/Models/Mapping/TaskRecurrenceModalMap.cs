@@ -13,12 +13,8 @@ namespace DatabaseInterop.Models.Mapping
             this.HasKey(t => t.TaskRecurrenceMapID);
 
             this.Property(t => t.TaskID).IsRequired();
-            this.Property(t => t.WeeklyRecurringDays).HasMaxLength(7);
-            this.Property(t => t.MonthlyRecurringDays).HasMaxLength(31);
-            this.Property(t => t.IsRecurring).IsRequired();
-            this.Property(t => t.IsRecurringBiWeekly).IsRequired();
-            this.Property(t => t.IsRecurringMonthly).IsRequired();
-            this.Property(t => t.IsRecurringWeekly).IsRequired();
+            this.Property(t => t.RecurringDays).HasMaxLength(31);
+            this.Property(t => t.RecurringType).IsRequired();
             this.Property(t => t.FirstOccurrance).IsRequired();
 
             this.ToTable("TaskRecurranceMap");
@@ -26,12 +22,8 @@ namespace DatabaseInterop.Models.Mapping
 
             this.Property(t => t.TaskRecurrenceMapID).HasColumnName("TaskRecurrenceMapID");
             this.Property(t => t.TaskID).HasColumnName("TaskID");
-            this.Property(t => t.WeeklyRecurringDays).HasColumnName("WeeklyRecurringDays");
-            this.Property(t => t.MonthlyRecurringDays).HasColumnName("MonthlyRecurringDays");
-            this.Property(t => t.IsRecurring).HasColumnName("IsRecurring");
-            this.Property(t => t.IsRecurringBiWeekly).HasColumnName("IsRecurringBiWeekly");
-            this.Property(t => t.IsRecurringMonthly).HasColumnName("IsRecurringMonthly");
-            this.Property(t => t.IsRecurringWeekly).HasColumnName("IsRecurringWeekly");
+            this.Property(t => t.RecurringType).HasColumnName("RecurringType");
+            this.Property(t => t.RecurringDays).HasColumnName("RecurringDays");
             this.Property(t => t.FirstOccurrance).HasColumnName("FirstOccurrance");
 
 
