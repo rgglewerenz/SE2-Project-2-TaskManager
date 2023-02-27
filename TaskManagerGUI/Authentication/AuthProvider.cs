@@ -17,22 +17,32 @@ namespace TaskManagerGUI.Authentication
 
         public async Task<bool> CheckAuth(string username, string password)
         {
+#if DEBUG
+            await GetUserInstance(username);
+            return true;
+#else
+
             var result = await GetInfoNonClass<bool>(BaseURL + "Auth/AuthUser" + $"?username={HttpUtility.UrlEncode(username)}&password={HttpUtility.UrlEncode(password)}");
             if(_user == null && result)
             {
                 await GetUserInstance(username);
             }
             return result;
+#endif
         }
 
 
 
 
-        #region Private Methods
+#region Private Methods
         private async Task GetUserInstance(string username)
         {
+#if DEBUG
+            _user = new UserTransferModal() { Age = int.MaxValue, Email = "Test@gamil.com", IsValid = true, UserID = 1, UserName = "Test" };
+#else
             _user = await GetInfoFromJson<UserTransferModal>(BaseURL + "Users/GetUser" + $"?username={HttpUtility.UrlEncode(username)}");
+#endif
         }
-        #endregion Private Methods
+#endregion Private Methods
     }
 }

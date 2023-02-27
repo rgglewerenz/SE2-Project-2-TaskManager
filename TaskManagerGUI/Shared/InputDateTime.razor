@@ -1,0 +1,37 @@
+﻿<label>Date</label>
+<br />
+<InputDate @bind-Value="@Value"></InputDate>
+<label>Time</label>
+<br/>
+<input type="time" @bind-value="Value"/>
+
+@code {
+    [Parameter]
+    public DateTime? Value
+    {
+        get => _tbDate?.Add(_tbTime.ToTimeSpan());
+        set
+        {
+            if (_tbDate?.Add(_tbTime.ToTimeSpan()) == value) return;
+
+            _tbDate = value;
+
+            _tbTime = TimeOnly.FromTimeSpan(_tbDate?.TimeOfDay?? new TimeSpan());
+
+            _tbDate = _tbDate?.Date;
+
+            ValueChanged.InvokeAsync(value);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<DateTime?> ValueChanged { get; set; }
+
+    [Parameter]
+    public DateTime? Placeholder { get; set; }
+
+    private DateTime? _tbDate;
+
+    private TimeOnly _tbTime;
+
+}
