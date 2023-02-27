@@ -9,6 +9,8 @@ namespace TaskManagerGUI.Authentication
 
         private UserTransferModal? _user;
 
+        public UserTransferModal? UserInfo => _user;
+
         public AuthProvider(HttpClient httpClient, IConfiguration configuration): base(httpClient, configuration) {
             BaseURL = configuration.GetValue<string>("BaseApiUrl");
         }
@@ -21,12 +23,16 @@ namespace TaskManagerGUI.Authentication
                 await GetUserInstance(username);
             }
             return result;
-        } 
+        }
 
+
+
+
+        #region Private Methods
         private async Task GetUserInstance(string username)
         {
             _user = await GetInfoFromJson<UserTransferModal>(BaseURL + "Users/GetUser" + $"?username={HttpUtility.UrlEncode(username)}");
         }
-
+        #endregion Private Methods
     }
 }

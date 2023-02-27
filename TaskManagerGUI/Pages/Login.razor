@@ -3,7 +3,14 @@
 
 <h3>Login</h3>
 
+<label>Username</label>
+<input type="text" />
+
+<label>Password</label>
+<input type="password"/>
+
 <button onclick="@CheckAuth">Check Login</button>
+
 
 @if (HasAuthed)
 {
@@ -15,10 +22,14 @@
 @code {
     private bool HasAuthed = false;
 
-
+    private string Username = "";
+    private string Password = "";
 
     public async Task CheckAuth()
     {
-        HasAuthed = await iauth.CheckAuth("Rlewerenz", "Milkyway2003");
+        if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Username))
+            HasAuthed = await iauth.CheckAuth("Rlewerenz", "Milkyway2003");
+        else
+            HasAuthed = await iauth.CheckAuth(Username, Password);
     }
 }

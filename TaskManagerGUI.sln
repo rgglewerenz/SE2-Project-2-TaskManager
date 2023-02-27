@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseInterop", "Database
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLTesting", "SQLTesting\SQLTesting.csproj", "{A61D7D3E-90C4-419D-B637-045ECF5A45BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAcess", "DataAcess\DataAcess.csproj", "{F208274F-FA9A-4DDE-8C03-4FA6893DC731}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAcess", "DataAcess\DataAcess.csproj", "{F208274F-FA9A-4DDE-8C03-4FA6893DC731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseBAL", "DatabaseBAL\DatabaseBAL.csproj", "{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseBAL", "DatabaseBAL\DatabaseBAL.csproj", "{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

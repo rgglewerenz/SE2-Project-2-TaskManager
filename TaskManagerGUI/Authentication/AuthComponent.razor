@@ -1,0 +1,22 @@
+﻿@inject IAuthProvider authServ
+@inject IJSRuntime js
+@inject NavigationManager navMan
+
+
+@ChildContent
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(authServ.UserInfo == null && navMan.ToBaseRelativePath(navMan.Uri) != "Login")
+        {
+            navMan.NavigateTo("/Login");
+        }
+        await base.OnInitializedAsync();
+    }
+
+}
