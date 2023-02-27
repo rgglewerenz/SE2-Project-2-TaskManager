@@ -10,13 +10,13 @@
     public RenderFragment ChildContent { get; set; }
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         if(authServ.UserInfo == null && navMan.ToBaseRelativePath(navMan.Uri) != "Login")
         {
             navMan.NavigateTo("/Login");
         }
-        await base.OnInitializedAsync();
+        await base.OnParametersSetAsync();
     }
 
 }

@@ -10,7 +10,4 @@ using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
 
-
-
-
-
+Console.WriteLine("Hello");

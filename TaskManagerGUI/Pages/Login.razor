@@ -1,4 +1,5 @@
 ﻿@inject IAuthProvider iauth
+@inject NavigationManager navMan
 @page "/Login"
 
 <h3>Login</h3>
@@ -31,5 +32,10 @@
             HasAuthed = await iauth.CheckAuth("Rlewerenz", "Milkyway2003");
         else
             HasAuthed = await iauth.CheckAuth(Username, Password);
+
+        if (HasAuthed)
+        {
+            navMan.NavigateTo("/");
+        }
     }
 }
