@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAcess", "DataAcess\Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseBAL", "DatabaseBAL\DatabaseBAL.csproj", "{B23F2C7D-ACFE-4A20-815D-8B09F69D4522}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseEnums", "DatabaseEnums\DatabaseEnums.csproj", "{8487BF12-2092-4753-9519-4C2B114BC7F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseEnums", "DatabaseEnums\DatabaseEnums.csproj", "{8487BF12-2092-4753-9519-4C2B114BC7F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

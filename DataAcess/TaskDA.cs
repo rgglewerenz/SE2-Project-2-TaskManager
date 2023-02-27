@@ -34,7 +34,7 @@ namespace DataAcess
                 }
 
                 UnitOfWork.TaskRepository.Insert(taskModal);
-                UnitOfWork.CommitTransaction();
+                UnitOfWork.Save();
 
 
                 UnitOfWork.UserTaskMapRepository.Insert(new UserTaskMap()
@@ -42,13 +42,14 @@ namespace DataAcess
                     UserID = userID,
                     TaskID = taskModal.TaskID,
                 });
-                UnitOfWork.CommitTransaction();
+				UnitOfWork.Save();
 
-                taskRecurrenceModal.TaskID = taskModal.TaskID;
+				taskRecurrenceModal.TaskID = taskModal.TaskID;
 
                 UnitOfWork.TaskTransferRepository.Insert(taskRecurrenceModal);
-                UnitOfWork.CommitTransaction();
+
                 UnitOfWork.Save();
+                UnitOfWork.CommitTransaction();
             }
             catch(Exception ex)
             {

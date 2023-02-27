@@ -9,7 +9,7 @@ namespace DatabaseInterop.Models
 {
     public class TaskRecurrenceModal
     {
-        public int TaskRecurrenceMapID { get; set; }
+        public int TaskRecurranceMapID { get; set; }
         public int TaskID { get; set; }
         public DatabaseEnums.RecurrentTypes RecurringType { get; set; } = RecurrentTypes.Never;
         public string? RecurringDays { get; set; }

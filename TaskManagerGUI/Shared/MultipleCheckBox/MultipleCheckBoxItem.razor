@@ -1,0 +1,36 @@
+﻿<label>@Name</label><InputCheckbox @bind-Value="IsChecked"></InputCheckbox>
+
+@code {
+    [CascadingParameter] MultipleCheckBox box { get; set; }
+    [Parameter] public EventCallback<(bool, char)> OnChange {get;set;}
+    [Parameter] public char Value { get; set; }
+    [Parameter] public string Name { get; set; }
+
+    
+
+
+    private bool IsChecked
+    {
+        get => _checked;
+        set
+        {
+            _checked = value;
+            OnChange.InvokeAsync((value, Value));
+        }
+    }
+
+
+
+    private bool _checked;
+
+    protected override void OnInitialized()
+    {
+        if(box == null)
+        {
+            throw new Exception("This component needs to be used with the MultipleCheckBox as it's parent");
+        }
+        base.OnInitialized();
+    }
+    
+
+}

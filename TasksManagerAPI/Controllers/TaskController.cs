@@ -20,8 +20,7 @@ namespace TasksManagerAPI.Controllers
 
 
         [HttpPost("CreateTasks/{UserID:int}")]
-        public bool CreateTask(int UserID, string title, string description, DateTime FirstOccurance,  bool IsRecurring, 
-                    bool IsRecurringWeekly, bool IsRecurringBiWeekly, bool IsRecurringMonthly, string MonthlyRecurringDays = null, string WeeklyRecurringDays = null) {
+        public bool CreateTask(int UserID, string title, string description, DateTime FirstOccurance, DatabaseEnums.RecurrentTypes RecurringType, string? RecurringDays ) {
             try{
                 _taskBAL.AddTask(new TaskTransferModal()
                 {
@@ -29,13 +28,9 @@ namespace TasksManagerAPI.Controllers
                     Description = description,
                     recurrenceOptions = new TaskRecurrenceTransferModal()
                     {
-                        IsRecurring = IsRecurring,
-                        IsRecurringBiWeekly = IsRecurringBiWeekly,
-                        IsRecurringMonthly = IsRecurringMonthly, 
-                        IsRecurringWeekly = IsRecurringWeekly,
-                        FirstOccurrance = FirstOccurance,
-                        MonthlyRecurringDays = MonthlyRecurringDays,
-                        WeeklyRecurringDays = WeeklyRecurringDays
+                        RecurringType = RecurringType,
+                        RecurringDays = RecurringDays,
+                        FirstOccurrance = FirstOccurance
                     }
                 },
                 UserID);

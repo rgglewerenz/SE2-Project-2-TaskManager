@@ -10,7 +10,7 @@ namespace DatabaseInterop.Models.Mapping
     public class TaskRecurrenceModalMap : EntityTypeConfiguration<TaskRecurrenceModal>
     {
         public TaskRecurrenceModalMap() {
-            this.HasKey(t => t.TaskRecurrenceMapID);
+            this.HasKey(t => t.TaskRecurranceMapID);
 
             this.Property(t => t.TaskID).IsRequired();
             this.Property(t => t.RecurringDays).HasMaxLength(31);
@@ -20,7 +20,7 @@ namespace DatabaseInterop.Models.Mapping
             this.ToTable("TaskRecurranceMap");
 
 
-            this.Property(t => t.TaskRecurrenceMapID).HasColumnName("TaskRecurrenceMapID");
+            this.Property(t => t.TaskRecurranceMapID).HasColumnName("TaskRecurranceMapID");
             this.Property(t => t.TaskID).HasColumnName("TaskID");
             this.Property(t => t.RecurringType).HasColumnName("RecurringType");
             this.Property(t => t.RecurringDays).HasColumnName("RecurringDays");

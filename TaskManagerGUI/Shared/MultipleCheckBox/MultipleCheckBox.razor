@@ -1,0 +1,48 @@
+﻿<CascadingValue Value="this">
+    <div class="multiple-selection-box">
+        @foreach (var item in SelectionValues)
+        {
+            <MultipleCheckBoxItem Name="@item.Key" Value="@item.Value" 
+                    OnChange="@(((bool, char) item) => _OnChange(item.Item1, item.Item2))" >
+            </MultipleCheckBoxItem>
+        }
+    </div>
+</CascadingValue>
+
+
+
+
+@code {
+    protected override void OnInitialized()
+    {
+
+        base.OnInitialized();
+    }
+
+    [Parameter] public Dictionary<string, char> SelectionValues { get; set; } = new Dictionary<string, char>();
+    [Parameter]
+    public EventCallback<string?> OnChange { get; set; }
+
+
+    private Dictionary<char, bool> IsClicked = new Dictionary<char, bool>();
+
+    private string? buildString()
+    {
+        string str = "";
+        foreach(var item in IsClicked)
+        {
+            if (item.Value)
+            {
+                str += item.Key;
+            }
+        }
+        return string.IsNullOrEmpty(str) ? null : str;
+    }
+
+    private void _OnChange(bool isOn, char ch)
+    {
+        IsClicked[ch] = isOn;
+        OnChange.InvokeAsync(buildString());
+    }
+
+}

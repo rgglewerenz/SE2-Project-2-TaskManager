@@ -1,0 +1,99 @@
+﻿@using DTO;
+<div class="form-group">
+	<label>Recurring Settings</label>
+	<br />
+	<label>Is Recurring</label>
+	<InputCheckbox @bind-Value="IsRecurring"></InputCheckbox>
+
+	@if (IsRecurring)
+	{
+		<div>
+			<label>Recurring Options</label>
+			<select @bind=_value.RecurringType>
+				<option value="@DatabaseEnums.RecurrentTypes.Daily">Daily</option>
+				<option value="@DatabaseEnums.RecurrentTypes.Monthly">Monthly</option>
+				<option value="@DatabaseEnums.RecurrentTypes.Weekly">Weekly</option>
+				<option value="@DatabaseEnums.RecurrentTypes.BiWeekly">BiWeekly</option>
+			</select>
+
+			@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.Monthly)
+			{
+				
+			}
+
+			@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.BiWeekly
+					||
+					_value.RecurringType == DatabaseEnums.RecurrentTypes.Weekly
+					)
+			{
+				<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysVal" OnChange="OnDayChange">
+
+				</TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox>
+			}
+		</div>
+	}
+</div>
+
+
+@code {
+
+	public Dictionary<char, bool> CharVal
+	{
+		get => charVal;
+		set
+		{
+			if (charVal == value) return;
+			charVal = value;
+		}
+	}
+
+	private void OnDayChange(string? str)
+	{
+		_value.RecurringDays = str;
+	}
+
+	private Dictionary<char, bool> charVal = new Dictionary<char, bool>();
+
+	private Dictionary<string, char> DaysVal = new Dictionary<string, char>()
+	{
+		{ "Monday" , 'M'}
+	};
+
+	private string[] selectedDays = { };
+
+	[Parameter]
+	public TaskRecurrenceTransferModal Value
+	{
+		get => _value;
+
+		set
+		{
+			if (_value == value) return;
+			_value = value;
+			ValueChanged.InvokeAsync(value);
+		}
+	}
+
+	private TaskRecurrenceTransferModal _value;
+
+	[Parameter]
+	public EventCallback<TaskRecurrenceTransferModal> ValueChanged { get; set; }
+
+	private bool IsRecurring
+	{
+		get => _value.RecurringType != DatabaseEnums.RecurrentTypes.Never;
+		set
+		{
+			if ((_value.RecurringType == DatabaseEnums.RecurrentTypes.Never
+				&& !value)
+			|| (_value.RecurringType != DatabaseEnums.RecurrentTypes.Never
+				&& value)) return;
+			if (value)
+				_value.RecurringType = DatabaseEnums.RecurrentTypes.Daily;
+			else
+				_value.RecurringType = DatabaseEnums.RecurrentTypes.Never;
+
+		}
+	}
+
+}
