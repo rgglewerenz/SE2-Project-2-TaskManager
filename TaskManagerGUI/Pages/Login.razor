@@ -1,0 +1,24 @@
+﻿@inject IAuthProvider iauth
+@page "/Login"
+
+<h3>Login</h3>
+
+<button onclick="@CheckAuth">Check Login</button>
+
+@if (HasAuthed)
+{
+    <h2>
+        Success
+    </h2>
+}
+
+@code {
+    private bool HasAuthed = false;
+
+
+
+    public async Task CheckAuth()
+    {
+        HasAuthed = await iauth.CheckAuth("Rlewerenz", "Milkyway2003");
+    }
+}
