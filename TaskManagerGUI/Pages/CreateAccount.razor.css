@@ -1,0 +1,13 @@
+﻿.account-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    margin-top: 25vh;
+    border: 2px solid var(--tirtiary-border-color);
+    color: var(--tirtiary-color);
+    padding: 15px;
+    border-radius: 15px;
+    background-color: var(--tirtiary-background-color);
+}
+
+

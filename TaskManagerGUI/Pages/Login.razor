@@ -6,7 +6,7 @@
 
 <div class="login-container">
     <div class="login-item" style="text-align:center;">
-        <h3>Login</h3>
+        <h3>Log in</h3>
     </div>
     <div class="login-item">
         <h6>Username</h6>
@@ -24,6 +24,18 @@
             Log in
         </button>    
     </div>
+
+    <hr/>
+
+
+    <div class="login-item" style="display: flex;flex-wrap: wrap; justify-content: center;">
+        <h3 style="width:100%;text-align:center;">Don't have an account?</h3>
+        <br/>
+        <button class="btn btn-outline-primary" @onclick="@CreateAccount">
+            Create one now
+        </button>
+    </div>
+
 </div>
 
 
@@ -58,5 +70,10 @@
     {
         navMan.NavigateTo("/ForgotPassword");
     }
+    
 
+    public void CreateAccount()
+    {
+        navMan.NavigateTo("/CreateAccount");
+    }
 }
