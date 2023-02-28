@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
-
-<PageTitle>TaskManagerGUI</PageTitle>
+@inject IAuthProvider authServ
+<PageTitle>Task Manager</PageTitle>
 
 <div class="page">
     <div class="sidebar">
@@ -9,7 +9,19 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            @if (@authServ.UserInfo != null)
+            {
+                <a class="usermenu-toggler" @onclick="ToggleNavMenu">
+                    @authServ.UserInfo.UserName
+                </a>
+                <div class="@UserMenuCssClass" @onclick="ToggleNavMenu">
+                    <nav class="flex-column">
+                        <NavLink class="nav-link" href="/Logout" Match="NavLinkMatch.All">
+                            <span class="oi oi-power-standby" aria-hidden="true"></span> Logout
+                        </NavLink>
+                    </nav>
+                </div>
+            }
         </div>
 
         <article class="content px-4">
@@ -19,4 +31,21 @@
         </article>
     </main>
 </div>
+
+@code{
+
+    private bool collapseUserMenu = true;
+
+    private string _userMenuCssClass = "user-menu-container";
+
+    private string? UserMenuCssClass => collapseUserMenu ? _userMenuCssClass + " collapse" : _userMenuCssClass;
+
+
+    private void ToggleNavMenu()
+    {
+        collapseUserMenu = !collapseUserMenu;
+    }
+
+}
+
 

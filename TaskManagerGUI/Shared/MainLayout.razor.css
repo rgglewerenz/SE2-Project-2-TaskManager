@@ -5,11 +5,13 @@
 }
 
 main {
+    background-color: var(--secondary-background-color);
+    color: var(--secondary-color);
     flex: 1;
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, var(--tirtiary-background-color) 0%, var(--secondary-background-color) 70%);
 }
 
 .top-row {
@@ -19,6 +21,7 @@ main {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    background-color: var(--secondary-background-color);
 }
 
     .top-row ::deep a, .top-row .btn-link {
@@ -30,6 +33,21 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+.usermenu-toggler {
+    background-color: var(--secondary-background-color);
+    color: var(--secondary-color);
+}
+
+
+.user-menu-container {
+    position: absolute;
+    top: 3.5rem;
+    background-color: #dfdfdf;
+    border: 2px solid #080808;
+    border-radius: 10px;
+    right: 0px;
+}
 
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {

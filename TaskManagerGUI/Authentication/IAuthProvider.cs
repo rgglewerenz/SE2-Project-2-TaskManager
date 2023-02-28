@@ -7,5 +7,7 @@ namespace TaskManagerGUI.Authentication
         public UserTransferModal? UserInfo { get; }
 
         public Task<bool> CheckAuth(string username, string password);
+
+        public void Logout();
     }
 }

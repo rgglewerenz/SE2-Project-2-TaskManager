@@ -62,3 +62,27 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.nav-link {
+    margin:0 !important;
+}
+
+
+:root {
+    /**/
+    --primary-background-color: #7289da;
+    --primary-color: #000000;
+    --primary-border-color: #ffffff;
+    /**/
+    --secondary-background-color: #1e2124;
+    --secondary-color: #aaaaaa;
+    --secondary-border-color: #ffffff;
+    /**/
+    --tirtiary-background-color: #424549;
+    --tirtiary-color: #ffffff;
+    --tirtiary-border-color: #000000;
+    /**/
+    --fourth-background-color: #36393e;
+    --fourth-color: #ffffff;
+    --fourth-border-color: #000000;
+}

@@ -1,45 +1,62 @@
 ﻿@inject IAuthProvider iauth
 @inject NavigationManager navMan
+@layout LoginLayout
 @page "/Login"
 
-<h3>Login</h3>
 
-<label>Username</label>
-<input type="text" />
+<div class="login-container">
+    <div class="login-item" style="text-align:center;">
+        <h3>Login</h3>
+    </div>
+    <div class="login-item">
+        <h6>Username</h6>
+        <input type="text" @bind=Username style="width:100%;" />
+    </div>
+    
+    <div class="login-item" style="display: flex;flex-wrap: wrap; justify-content: space-between;">
+        <h6>Password</h6> <div><h10>Show Password</h10><input type="checkbox" @bind=show_pass /></div>
+        <input type="@inputType" @bind=Password style="width:100%;"/>
+        <a class="forgot-password-href" @onclick=ForgotPassword>Forgot Password</a>
+    </div>
 
-<label>Password</label>
-<input type="password"/>
+    <div class="login-item" style="justify-content:end;display:flex;">
+        <button class="btn btn-outline-primary" @onclick="@CheckAuth">
+            Log in
+        </button>    
+    </div>
+</div>
 
 
-
-<button onclick="@CheckAuth">Check Login</button>
-
-
-@if (HasAuthed)
-{
-    <h2>
-        Success
-    </h2>
-}
-
+<Loader Show="Loading" />
 
 @code {
-
+    private bool Loading = false;
     private bool HasAuthed = false;
+
+    private string inputType => show_pass ? "text" : "password";
+
+    private bool show_pass = false;
 
     private string Username = "";
     private string Password = "";
 
     public async Task CheckAuth()
     {
+        Loading = true;
         if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Username))
             HasAuthed = await iauth.CheckAuth("Rlewerenz", "Milkyway2003");
         else
             HasAuthed = await iauth.CheckAuth(Username, Password);
-
+        Loading = false;
         if (HasAuthed)
         {
             navMan.NavigateTo("/");
         }
     }
+
+    public void ForgotPassword()
+    {
+        navMan.NavigateTo("/ForgotPassword");
+    }
+
 }

@@ -31,18 +31,24 @@ namespace TaskManagerGUI.Authentication
 #endif
         }
 
+        public void Logout()
+        {
+            _user = null;
+        }
 
 
 
-#region Private Methods
+        #region Private Methods
         private async Task GetUserInstance(string username)
         {
 #if DEBUG
-            _user = new UserTransferModal() { Age = int.MaxValue, Email = "Test@gamil.com", IsValid = true, UserID = 1, UserName = "Test" };
+            _user = new UserTransferModal() { Age = int.MaxValue, Email = "rgglewerenz@gamil.com", IsValid = true, UserID = 1, UserName = "Rlewerenz" };
 #else
             _user = await GetInfoFromJson<UserTransferModal>(BaseURL + "Users/GetUser" + $"?username={HttpUtility.UrlEncode(username)}");
 #endif
         }
-#endregion Private Methods
+
+        
+        #endregion Private Methods
     }
 }

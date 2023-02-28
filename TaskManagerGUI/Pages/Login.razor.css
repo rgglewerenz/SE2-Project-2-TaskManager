@@ -1,0 +1,37 @@
+﻿.login-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    margin-top: 25vh;
+    border: 2px solid var(--tirtiary-border-color);
+    color: var(--tirtiary-color);
+    padding: 15px;
+    border-radius: 15px;
+    background-color: var(--tirtiary-background-color);
+}
+
+.login-item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h10{
+    font-size:12px;
+    margin-right:5px;
+}
+
+
+.forgot-password-href {
+    margin-top: 5px;
+    color: var(--primary-background-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-background-color);
+    border-color: var(--primary-background-color);
+}
+
+    .btn-outline-primary:hover {
+        color: white;
+        background-color: var(--primary-background-color);
+    }
