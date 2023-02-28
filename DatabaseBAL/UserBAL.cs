@@ -25,7 +25,7 @@ namespace DatabaseBAL
         }
         public UserModal GetUsernameByID(int id)
         {
-            return _usersDA.GetUsersByID(id);
+            return _usersDA.GetUserByID(id);
         }
         public UserModal GetUsernameByUsername(string username)
         {
@@ -70,6 +70,16 @@ namespace DatabaseBAL
         public UserTransferModal GetUserTransferByUsername(string username)
         {
             return _usersDA.GetUserTransferByUsername(username);
+        }
+
+        public bool RequestNewPasswordCode(int userID)
+        {
+            return _usersDA.RequestNewPasswordCode(userID);
+        }
+
+        public bool ResetPassword(string pass_reset_code, string new_pass)
+        {
+            return _usersDA.ResetPassword(pass_reset_code, new_pass);
         }
 
         #endregion Auth

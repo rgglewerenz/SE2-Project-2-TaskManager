@@ -27,6 +27,7 @@ namespace DatabaseInterop
             modelBuilder.Configurations.Add(new UserTaskMapMap());
             modelBuilder.Configurations.Add(new EmailValidationMap());
             modelBuilder.Configurations.Add(new TaskRecurrenceModalMap());
+            modelBuilder.Configurations.Add(new PasswordResetModalMap());
         }
     }
 }

@@ -9,7 +9,6 @@ namespace DTO
 {
     public class TaskTransferModal
     {
-        
         public int TaskID { get; set; }
 		[Required]
 		[StringLength(50, ErrorMessage = "Title must be less than 50 characters.")]

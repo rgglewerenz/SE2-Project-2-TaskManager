@@ -121,7 +121,7 @@ namespace DataAcess
 
         }
 
-        public UserModal GetUsersByID(int id)
+        public UserModal GetUserByID(int id)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace DataAcess
 
         public bool ValidateEmail(int userID, string code)
         {
-            var user = this.GetUsersByID(userID);
+            var user = this.GetUserByID(userID);
 
             var emailValidation = (from Validation in UnitOfWork.EmailValidationRepository.GetQuery()
                                    where Validation.UserID == userID
@@ -205,6 +205,45 @@ namespace DataAcess
             throw new Exception($"This account with the userID = {user.UserID} does not have a valid email");
         }
 
-        
+        public bool RequestNewPasswordCode(int userID)
+        {
+            var user = GetUserByID(userID);
+
+            if(user == null)
+            {
+                return false;
+            }
+
+            var pass_reset = new PasswordResetModal()
+            {
+                Code = RandomChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 20),
+                CreationDate = DateTime.Now,
+                UserID = user.UserID
+            };
+
+            UnitOfWork.PasswordResetModalRepository.Insert(pass_reset);
+            UnitOfWork.Save();
+            return true;
+        }
+
+        public bool ResetPassword(string code, string new_pass)
+        {
+            var pass_reset = (from PassReset in UnitOfWork.PasswordResetModalRepository.GetQuery()
+                                  where code == PassReset.Code
+                                  select PassReset).First();
+
+            if (pass_reset.CreationDate.AddMinutes(60) > DateTime.Now)
+            {
+                throw new Exception($"The code {code}\nhas expired, please request a new code");
+            }
+
+            var user = GetUserByID(pass_reset.UserID);
+
+            user.CreatePasswordHash(new_pass);
+
+            UnitOfWork.UserRepository.Update(user);
+            UnitOfWork.Save();
+            return true;
+        }
     }
 }

@@ -78,5 +78,6 @@
     <Build Include="dbo\UserTasksMap.sql" />
     <Build Include="dbo\EmailValidationTable.sql" />
     <Build Include="dbo\TaskRecurrenceMap.sql" />
+    <Build Include="dbo\PasswordResetTable.sql" />
   </ItemGroup>
 </Project>

@@ -16,6 +16,18 @@ namespace TasksManagerAPI.Controllers
             return _userBAL.AuthorizeUser(username, password);
         }
 
+        [HttpGet("RequestNewPasswordCode")]
+        public bool RequestNewPasswordCode(int UserID)
+        {
+            return _userBAL.RequestNewPasswordCode(UserID);
+        }
+
+        [HttpGet("ResetPassword")]
+        public bool ResetPassword(string pass_reset_code, string new_pass)
+        {
+            return _userBAL.ResetPassword(pass_reset_code, new_pass);
+        }
+
         [HttpPost("CreateUser")]
         public bool CreateUser(string username, string password, int age, string email) {
             UserModal new_user = new UserModal()

@@ -27,6 +27,7 @@ namespace DatabaseInterop
         public GenericRepository<UserTaskMap> UserTaskMapRepository { get; }
         public GenericRepository<EmailValidationModal> EmailValidationRepository { get; }
         public GenericRepository<TaskRecurrenceModal> TaskTransferRepository { get; }
+        GenericRepository<PasswordResetModal> PasswordResetModalRepository { get; }
         #endregion Repositories
     }
 }

@@ -41,6 +41,8 @@ namespace DatabaseInterop
 
         private GenericRepository<TaskRecurrenceModal> _taskTransferRepository;
 
+        private GenericRepository<PasswordResetModal> _passwordResetModalRepository;
+
         #endregion Private Repos
 
         #region Public Repos
@@ -85,7 +87,13 @@ namespace DatabaseInterop
             }
         }
 
-
+        public GenericRepository<PasswordResetModal> PasswordResetModalRepository
+        {
+            get
+            {
+                return _passwordResetModalRepository ?? (_passwordResetModalRepository = new GenericRepository<PasswordResetModal>(dbcontext));
+            }
+        }
         #endregion  Public Repos
 
         public void Commit()

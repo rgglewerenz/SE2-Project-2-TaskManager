@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using TaskManagerGUI.Authentication;
+using TaskManagerGUI.Interface;
+using TaskManagerGUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,7 @@ builder.WebHost.UseElectron(args);
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
-
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 
 if (HybridSupport.IsElectronActive)
