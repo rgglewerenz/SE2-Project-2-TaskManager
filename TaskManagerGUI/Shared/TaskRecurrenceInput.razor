@@ -22,9 +22,12 @@
 						<option value="@DatabaseEnums.RecurrentTypes.BiWeekly">BiWeekly</option>
 					</select>
 
+
 				
 					@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.Monthly)
 					{
+						<br/>
+						<br/>
 						<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysOfTheMonthVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
 					}
 
@@ -33,6 +36,9 @@
 						_value.RecurringType == DatabaseEnums.RecurrentTypes.Weekly
 						)
 					{
+
+						<br />
+						<br />
 						<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
 					}
 				

@@ -7,5 +7,9 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-
 }
+
+input {
+    background-color: var(--secondary-color) !important;
+}
+

@@ -86,3 +86,8 @@ a, .btn-link {
     --fourth-color: #ffffff;
     --fourth-border-color: #000000;
 }
+
+.custom_input {
+    background-color: var(--secondary-color) !important;
+    color: var(--secondary-background-color) !important;
+}
