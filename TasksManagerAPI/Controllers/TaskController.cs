@@ -20,20 +20,9 @@ namespace TasksManagerAPI.Controllers
 
 
         [HttpPost("CreateTasks/{UserID:int}")]
-        public bool CreateTask(int UserID, string title, string description, DateTime FirstOccurance, DatabaseEnums.RecurrentTypes RecurringType, string? RecurringDays ) {
+        public bool CreateTask(int UserID, TaskTransferModal taskTransfer) {
             try{
-                _taskBAL.AddTask(new TaskTransferModal()
-                {
-                    Title = title,
-                    Description = description,
-                    recurrenceOptions = new TaskRecurrenceTransferModal()
-                    {
-                        RecurringType = RecurringType,
-                        RecurringDays = RecurringDays,
-                        FirstOccurrance = FirstOccurance
-                    }
-                },
-                UserID);
+                _taskBAL.AddTask(taskTransfer, UserID);
                 return true;
             }catch(Exception ex)
             {
