@@ -1,46 +1,64 @@
-﻿<h3>TaskForm</h3>
+﻿<div class="task-form">
+	<EditForm Model="InitialValue" OnValidSubmit="Submit">
+		<DataAnnotationsValidator/>
+		<ValidationSummary />
 
-@if (!string.IsNullOrEmpty(alertMessage))
-{
-	<h4>@alertMessage</h4>
-}
 
-<EditForm Model="modal" OnValidSubmit="Submit">
-	<div class="form-group">
-		<label>Title</label>
-		<input type="text" placeholder="Enter Title Here" @bind=modal.Title />
-	</div>
-	<div class="form-group">
-		<label>Description</label>
-		<input type="text" placeholder="Enter Description Here" @bind=modal.Description />
-	</div>
-	<div class="form-group">
-		<label>Start Date</label>
-		<InputDateTime @bind-Value="modal.recurrenceOptions.FirstOccurrance">
-		</InputDateTime>
-	</div>
+		<div class="form-group">
+			<div class="individual-item">
+				<h4>Title</h4>
+			</div>
+			<div class="individual-item">
+				<input type="text" placeholder="Enter Title Here" @bind=InitialValue.Title />
+			</div>
+		</div>
 
-	<TaskRecurrenceInput @bind-Value="modal.recurrenceOptions"></TaskRecurrenceInput>
+		<div class="form-group">
+			<div class="individual-item">
+				<h4>Description</h4>
+			</div>
+			<div class="individual-item">
+				<textarea  placeholder="Enter Description Here" @bind=InitialValue.Description  style="width:100%;"/>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="individual-item">
+				<h4>Start Date</h4>
+			</div>
+			<CenterHorizontally>
+				<div class="individual-item" style="width:175px;">
+					<InputDateTime @bind-Value="InitialValue.recurrenceOptions.FirstOccurrance" />
+				</div>
+			</CenterHorizontally>
+		</div>
+
+		<TaskRecurrenceInput @bind-Value="InitialValue.recurrenceOptions"></TaskRecurrenceInput>
 	
-
-	<button type="submit">Enter</button>
+		<div class="form-group">
+			<div class="individual-item">
+				<button type="submit" class="btn btn-outline-primary">Enter</button>
+			</div>
+		</div>
 </EditForm>
+</div>
+
 
 
 @code {
-	private DTO.TaskTransferModal modal = new DTO.TaskTransferModal(){
-		recurrenceOptions = new DTO.TaskRecurrenceTransferModal(){
-			FirstOccurrance = DateTime.Now
-		}
-	};
+	[Parameter] public EventCallback<DTO.TaskTransferModal> OnSubmit { get; set; }
 
-	
+	[Parameter]
+	public DTO.TaskTransferModal InitialValue { get; set; } = new DTO.TaskTransferModal()
+		{
+			recurrenceOptions = new DTO.TaskRecurrenceTransferModal()
+			{
+				FirstOccurrance = DateTime.Now
+			}
+		};
 
-	private string alertMessage = "";
-
-	private async Task Submit(){
-		alertMessage = modal.recurrenceOptions.FirstOccurrance?.ToString("MM/dd/yyyy hh:mm:ss");
+	private async Task Submit()
+	{
+		await OnSubmit.InvokeAsync(InitialValue);
 	}
-
-
 }

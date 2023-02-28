@@ -1,0 +1,22 @@
+﻿.recurrance-settings-container{
+    border: 1px solid;
+    padding:10px;
+    text-align:center;
+    justify-content:center;
+    border-radius:15px;
+}
+
+.recurrance-options-container {
+    width: fit-content;
+    border: 1px dashed #80809f;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius:5px;
+}
+
+.recurrance-item{
+    width:100%;
+    text-align:center;
+}

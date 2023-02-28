@@ -1,0 +1,11 @@
+﻿.input-date-container{
+    
+}
+
+
+.input-date-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+}

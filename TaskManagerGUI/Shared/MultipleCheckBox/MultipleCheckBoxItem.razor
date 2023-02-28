@@ -1,12 +1,20 @@
-﻿<label>@Name</label><InputCheckbox @bind-Value="IsChecked"></InputCheckbox>
+﻿
+<div class="multiple-selection-box-item">
+    <label>
+        @Name
+    </label>
+    <InputCheckbox @bind-Value="IsChecked"/>
+</div>
+
 
 @code {
     [CascadingParameter] MultipleCheckBox box { get; set; }
     [Parameter] public EventCallback<(bool, char)> OnChange {get;set;}
     [Parameter] public char Value { get; set; }
     [Parameter] public string Name { get; set; }
+    [Parameter] public bool IsCheckedInit { get; set; }
 
-    
+
 
 
     private bool IsChecked
@@ -29,6 +37,9 @@
         {
             throw new Exception("This component needs to be used with the MultipleCheckBox as it's parent");
         }
+
+        IsChecked = IsCheckedInit;
+
         base.OnInitialized();
     }
     

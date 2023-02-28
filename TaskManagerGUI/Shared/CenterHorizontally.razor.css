@@ -1,0 +1,9 @@
+﻿.center-item {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center-conatiner {
+    width: 100%;
+}

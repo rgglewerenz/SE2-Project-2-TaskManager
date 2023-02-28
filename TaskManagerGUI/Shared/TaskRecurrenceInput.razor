@@ -1,37 +1,49 @@
 ﻿@using DTO;
 <div class="form-group">
-	<label>Recurring Settings</label>
-	<br />
-	<label>Is Recurring</label>
-	<InputCheckbox @bind-Value="IsRecurring"></InputCheckbox>
-
-	@if (IsRecurring)
-	{
-		<div>
-			<label>Recurring Options</label>
-			<select @bind=_value.RecurringType>
-				<option value="@DatabaseEnums.RecurrentTypes.Daily">Daily</option>
-				<option value="@DatabaseEnums.RecurrentTypes.Monthly">Monthly</option>
-				<option value="@DatabaseEnums.RecurrentTypes.Weekly">Weekly</option>
-				<option value="@DatabaseEnums.RecurrentTypes.BiWeekly">BiWeekly</option>
-			</select>
-
-			@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.Monthly)
-			{
-				
-			}
-
-			@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.BiWeekly
-					||
-					_value.RecurringType == DatabaseEnums.RecurrentTypes.Weekly
-					)
-			{
-				<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysVal" OnChange="OnDayChange">
-
-				</TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox>
-			}
+	<div class="recurrance-item">
+			<h4>Recurring Settings</h4>
+	</div>
+	<div class="recurrance-settings-container">
+		
+		
+		<div class="recurrance-item">
+			<label>Is Recurring</label>
+			<InputCheckbox @bind-Value="IsRecurring"></InputCheckbox>
 		</div>
+		@if (IsRecurring)
+		{
+			<CenterHorizontally>
+				<div class="recurrance-options-container">
+					<label>Recurring Options</label>
+					<select @bind=_value.RecurringType>
+						<option value="@DatabaseEnums.RecurrentTypes.Daily">Daily</option>
+						<option value="@DatabaseEnums.RecurrentTypes.Monthly">Monthly</option>
+						<option value="@DatabaseEnums.RecurrentTypes.Weekly">Weekly</option>
+						<option value="@DatabaseEnums.RecurrentTypes.BiWeekly">BiWeekly</option>
+					</select>
+
+				
+					@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.Monthly)
+					{
+						<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysOfTheMonthVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
+					}
+
+					@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.BiWeekly
+						||
+						_value.RecurringType == DatabaseEnums.RecurrentTypes.Weekly
+						)
+					{
+						<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
+					}
+				
+
+				
+				</div>
+			</CenterHorizontally>
 	}
+
+	</div>
+	
 </div>
 
 
@@ -50,14 +62,23 @@
 	private void OnDayChange(string? str)
 	{
 		_value.RecurringDays = str;
+		ValueChanged.InvokeAsync(_value);
 	}
 
 	private Dictionary<char, bool> charVal = new Dictionary<char, bool>();
 
 	private Dictionary<string, char> DaysVal = new Dictionary<string, char>()
 	{
-		{ "Monday" , 'M'}
+		{ "Monday" , 'M'},
+		{ "Tuesday" , 'T'},
+		{ "Wendsday" , 'W'},
+		{ "Thursday" , 'R'},
+		{ "Friday" , 'F'},
+		{ "Saturday" , 'S'},
+		{ "Sunday" , 'U'}
 	};
+
+	private Dictionary<string, char> DaysOfTheMonthVal = new Dictionary<string, char>();
 
 	private string[] selectedDays = { };
 
@@ -94,6 +115,16 @@
 				_value.RecurringType = DatabaseEnums.RecurrentTypes.Never;
 
 		}
+	}
+
+	protected override void OnInitialized()
+	{
+		for(int i =1; i < 32; i++)
+		{
+			DaysOfTheMonthVal[i.ToString()] = (char)(i + 32);
+		}
+
+		base.OnInitialized();
 	}
 
 }

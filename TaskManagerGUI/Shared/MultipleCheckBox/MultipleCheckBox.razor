@@ -3,7 +3,7 @@
         @foreach (var item in SelectionValues)
         {
             <MultipleCheckBoxItem Name="@item.Key" Value="@item.Value" 
-                    OnChange="@(((bool, char) item) => _OnChange(item.Item1, item.Item2))" >
+                    OnChange="@(((bool, char) item) => _OnChange(item.Item1, item.Item2))" IsCheckedInit="@IsClicked[item.Value]">
             </MultipleCheckBoxItem>
         }
     </div>
@@ -15,6 +15,14 @@
 @code {
     protected override void OnInitialized()
     {
+        foreach (var item in SelectionValues)
+        {
+            if (!IsClicked.ContainsKey(item.Value))
+            {
+                IsClicked[item.Value] = InitalVal != null ? InitalVal.Contains(item.Value) : false;
+            }
+        }
+
 
         base.OnInitialized();
     }
@@ -22,6 +30,10 @@
     [Parameter] public Dictionary<string, char> SelectionValues { get; set; } = new Dictionary<string, char>();
     [Parameter]
     public EventCallback<string?> OnChange { get; set; }
+
+
+    [Parameter]
+    public string? InitalVal { get; set; } = "";
 
 
     private Dictionary<char, bool> IsClicked = new Dictionary<char, bool>();

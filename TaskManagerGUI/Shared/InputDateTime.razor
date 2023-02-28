@@ -1,9 +1,16 @@
-﻿<label>Date</label>
-<br />
-<InputDate @bind-Value="@Value"></InputDate>
-<label>Time</label>
-<br/>
-<input type="time" @bind-value="Value"/>
+﻿<div class="input-date-container">
+    <div class="input-date-item">
+        <label>Date</label>
+        <InputDate @bind-Value="@Value"></InputDate>
+    </div>
+
+
+    <div class="input-date-item">
+        <label>Time</label>
+        <input type="time" @bind-value="Value" />
+    </div>
+</div>
+
 
 @code {
     [Parameter]
