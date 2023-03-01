@@ -1,0 +1,44 @@
+﻿@typeparam T
+@inject IJSRuntime js
+
+<div class="list-container">
+    @foreach (var item in DisplayedResults)
+    {
+        <div class="list-item">
+            @ChildFragment(item)
+        </div>
+    }
+</div>
+
+<GenericPagination CurrentPage="CurrPage" SelectedPage="SelectedPage" TotalAmountPages="(int)Math.Floor((double)Items.Count/PageSize)" Radius="Radius"/>
+
+@code {
+    [Parameter] public List<T> Items { get; set; } = new List<T>();
+    [Parameter] public RenderFragment<T> ChildFragment { get; set; } 
+    [Parameter] public int PageSize { get; set; } = 5;
+    [Parameter] public int Radius { get; set; } = 2;
+
+    protected override async  Task OnParametersSetAsync()
+    {
+        SelectedPage(1);
+        await base.OnParametersSetAsync();
+    }
+
+    private List<T> DisplayedResults =  new List<T>();
+
+    private int CurrPage = 1;
+
+
+    void SelectedPage(int i)
+    {
+        CurrPage = i;
+        DisplayedResults = Items.Skip((CurrPage - 1) * PageSize).Take(PageSize).ToList();
+        InvokeAsync(ScrollToTopOfPage);
+    }
+
+    private async Task ScrollToTopOfPage()
+    {
+        await js.InvokeVoidAsync("scrollToTop");
+    }
+
+}

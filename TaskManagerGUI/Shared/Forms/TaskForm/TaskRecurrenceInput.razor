@@ -1,4 +1,5 @@
 ﻿@using DTO;
+@using TaskManagerGUI.Shared.Forms.TaskForm.MultipleCheckBox;
 <div class="form-group">
 	<div class="recurrance-item">
 			<h4>Recurring Settings</h4>
@@ -28,7 +29,7 @@
 					{
 						<br/>
 						<br/>
-						<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysOfTheMonthVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
+						<MultipleCheckBox SelectionValues="DaysOfTheMonthVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
 					}
 
 					@if (_value.RecurringType == DatabaseEnums.RecurrentTypes.BiWeekly
@@ -39,7 +40,7 @@
 
 						<br />
 						<br />
-						<TaskManagerGUI.Shared.MultipleCheckBox.MultipleCheckBox SelectionValues="DaysVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
+						<MultipleCheckBox SelectionValues="DaysVal" OnChange="OnDayChange" InitalVal="@(_value.RecurringDays)"/>
 					}
 				
 

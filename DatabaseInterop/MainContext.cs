@@ -28,6 +28,7 @@ namespace DatabaseInterop
             modelBuilder.Configurations.Add(new EmailValidationMap());
             modelBuilder.Configurations.Add(new TaskRecurrenceModalMap());
             modelBuilder.Configurations.Add(new PasswordResetModalMap());
+            modelBuilder.Configurations.Add(new ApiAuthCodeTableMap());
         }
     }
 }

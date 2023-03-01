@@ -25,13 +25,18 @@ namespace DatabaseBAL
             return _tasksDA.GetTaskTransferModals(userID);
         }
 
-        public void AddTask(TaskTransferModal task,  int userID) {
-            _tasksDA.AddTask(task,  userID);
+        public bool AddTask(TaskTransferModal task,  int userID) {
+            return _tasksDA.AddTask(task,  userID);
         }
 
-        public void UpdateTask(TaskTransferModal taskTransferModal, int userID)
+        public bool UpdateTask(TaskTransferModal taskTransferModal, int userID)
         {
-            _tasksDA.UpdateTask(taskTransferModal, userID);
+            return _tasksDA.UpdateTask(taskTransferModal, userID);
+        }
+
+        public bool DeleteTask(int taskID)
+        {
+            return _tasksDA.DeleteTask(taskID);
         }
     }
 }

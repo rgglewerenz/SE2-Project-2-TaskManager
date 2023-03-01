@@ -1,6 +1,8 @@
 ﻿@inject IAuthProvider authServ
 @inject IJSRuntime js
 @inject NavigationManager navMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
 
 
 @ChildContent
@@ -10,13 +12,35 @@
     public RenderFragment ChildContent { get; set; }
 
 
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuth();
+        await base.OnInitializedAsync();
+    }
+
+    
+
     protected override async Task OnParametersSetAsync()
     {
-        if(authServ.UserInfo == null && navMan.ToBaseRelativePath(navMan.Uri) != "Login")
-        {
-            navMan.NavigateTo("/Login");
-        }
+        await CheckAuth();
         await base.OnParametersSetAsync();
+    }
+
+    private async Task CheckAuth(){
+        if (authServ.UserInfo == null && navMan.ToBaseRelativePath(navMan.Uri) != "Login")
+        {
+            await CheckLocalStorage();
+            if (authServ.UserInfo == null)
+            {
+                navMan.NavigateTo("/Login");
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task CheckLocalStorage()
+    {
+        await authServ.CheckLocalStorage(BrowserStorage);
     }
 
 }

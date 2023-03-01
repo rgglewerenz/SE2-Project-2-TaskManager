@@ -1,0 +1,29 @@
+﻿.task-form {
+    width: fit-content;
+    min-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+    margin-top:30vh;
+    border: 2px solid var(--fourth-border-color);
+    border-radius: 20px;
+    justify-content: center;
+    padding: 20px;
+    color: var(--fourth-color);
+    background-color: var(--fourth-background-color);
+}
+
+.form-group{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.btn-outline-primary {
+    color: var(--primary-background-color);
+    border-color: var(--primary-background-color);
+}
+
+    .btn-outline-primary:hover {
+        color: white;
+        background-color: var(--primary-background-color);
+    }

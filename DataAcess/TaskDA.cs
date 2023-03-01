@@ -18,7 +18,7 @@ namespace DataAcess
         {
         }
 
-        public void AddTask(TaskModal taskModal, TaskRecurrenceModal taskRecurrenceModal, int userID)
+        public bool AddTask(TaskModal taskModal, TaskRecurrenceModal taskRecurrenceModal, int userID)
         {
             try
             {
@@ -46,22 +46,24 @@ namespace DataAcess
 
 				taskRecurrenceModal.TaskID = taskModal.TaskID;
 
-                UnitOfWork.TaskTransferRepository.Insert(taskRecurrenceModal);
+                UnitOfWork.TaskRecurranceRepository.Insert(taskRecurrenceModal);
 
                 UnitOfWork.Save();
                 UnitOfWork.CommitTransaction();
+                return true;
             }
             catch(Exception ex)
             {
                 UnitOfWork.RollbackTransaction();
+                return false;
             }
             
         }
 
-        public void AddTask(TaskTransferModal task, int userID)
+        public bool AddTask(TaskTransferModal task, int userID)
         {
             if (task.recurrenceOptions != null)
-                AddTask(new TaskModal()
+                return AddTask(new TaskModal()
                         {
                             Title = task.Title,
                             Description = task.Description,
@@ -76,7 +78,6 @@ namespace DataAcess
             else
                 throw new Exception("The recurrence Modal can not be null");
         }
-
 
         public List<TaskModal> GetTasks(int userID)
         {
@@ -127,11 +128,13 @@ namespace DataAcess
                          select Tasks);
 
 
-            var tasksRecurrence = (from TasksRecurrence in UnitOfWork.TaskTransferRepository.GetQuery()
-                                   where tasks.Select(x => x.TaskID == TasksRecurrence.TaskID).Count() == 1
+            var tasksRecurrence = (from TasksRecurrence in UnitOfWork.TaskRecurranceRepository.GetQuery()
+                                   where taskIDs.Contains(TasksRecurrence.TaskID)
                                    select TasksRecurrence);
 
             if(taskIDs.Count() != tasksRecurrence.Count()) {
+                var taskCount = taskIDs.Count();
+                var RecurranceCount = tasksRecurrence.Count();
                 throw new Exception("A task does not a recurrence map");
             }
 
@@ -152,7 +155,7 @@ namespace DataAcess
 
         }
 
-        public void UpdateTask(TaskModal taskModal, TaskRecurrenceModal taskRecurrenceModal, int userID)
+        public bool UpdateTask(TaskModal taskModal, TaskRecurrenceModal taskRecurrenceModal, int userID)
         {
             try
             {
@@ -167,34 +170,49 @@ namespace DataAcess
                     throw new Exception($"Unable to find a user with id {userID}");
                 }
 
-                UnitOfWork.TaskRepository.Update(taskModal);
-                UnitOfWork.CommitTransaction();
+                var oldModal = (from TaskRepo in UnitOfWork.TaskRepository.GetQuery()
+                                where TaskRepo.TaskID == taskModal.TaskID
+                                select TaskRepo).First();
 
-
-                UnitOfWork.UserTaskMapRepository.Update(new UserTaskMap()
+                if(oldModal != taskModal)
                 {
-                    UserID = userID,
-                    TaskID = taskModal.TaskID,
-                });
-                UnitOfWork.CommitTransaction();
+                    oldModal.Title = taskModal.Title;
+                    oldModal.Description = taskModal.Description;
+                    UnitOfWork.TaskRepository.Update(oldModal);
+                    UnitOfWork.Save();
+                }
+
 
                 taskRecurrenceModal.TaskID = taskModal.TaskID;
 
-                UnitOfWork.TaskTransferRepository.Update(taskRecurrenceModal);
+                var oldRecurrance = (from TaskRepo in UnitOfWork.TaskRecurranceRepository.GetQuery()
+                                     where TaskRepo.TaskID == taskModal.TaskID
+                                     select TaskRepo).First();
+
+                if (taskRecurrenceModal != oldRecurrance)
+                {
+                    oldRecurrance.FirstOccurrance = taskRecurrenceModal.FirstOccurrance;
+                    oldRecurrance.RecurringDays = taskRecurrenceModal.RecurringDays;
+                    oldRecurrance.RecurringType = taskRecurrenceModal.RecurringType;
+                    UnitOfWork.TaskRecurranceRepository.Update(oldRecurrance);
+                    UnitOfWork.Save();
+                } 
+
                 UnitOfWork.CommitTransaction();
-                UnitOfWork.Save();
+                return true;
             }
             catch (Exception ex)
             {
                 UnitOfWork.RollbackTransaction();
+                return false;
             }
 
         }
 
-        public void UpdateTask(TaskTransferModal task, int userID)
+        public bool UpdateTask(TaskTransferModal task, int userID)
         {
             if (task.recurrenceOptions != null)
-                UpdateTask(new TaskModal()
+                return UpdateTask(new TaskModal()
                 {
                     TaskID = task.recurrenceOptions.TaskID,
                     Title = task.Title,
@@ -210,6 +228,32 @@ namespace DataAcess
                         userID);
             else
                 throw new Exception("The recurrence Modal can not be null");
+        }
+
+        public bool DeleteTask(int taskID)
+        {
+            try
+            {
+                UnitOfWork.StartTransaction();
+
+                UnitOfWork.TaskRecurranceRepository.Delete(UnitOfWork.TaskRecurranceRepository.Get(x => x.TaskID == taskID).First());
+                UnitOfWork.Save();
+
+                UnitOfWork.UserTaskMapRepository.Delete(UnitOfWork.UserTaskMapRepository.Get(x => x.TaskID == taskID).First());
+                UnitOfWork.Save();
+
+                UnitOfWork.TaskRepository.Delete(UnitOfWork.TaskRepository.Get(x => x.TaskID == taskID).First());
+
+                UnitOfWork.Save();
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                UnitOfWork.RollbackTransaction();
+                return false;
+            }
+
         }
     }
 }

@@ -43,6 +43,8 @@ namespace DatabaseInterop
 
         private GenericRepository<PasswordResetModal> _passwordResetModalRepository;
 
+        private GenericRepository<ApiAuthCodeTableModel> _apiAuthCodeRepository;
+
         #endregion Private Repos
 
         #region Public Repos
@@ -79,7 +81,7 @@ namespace DatabaseInterop
             }
         }
 
-        public GenericRepository<TaskRecurrenceModal> TaskTransferRepository
+        public GenericRepository<TaskRecurrenceModal> TaskRecurranceRepository
         {
             get
             {
@@ -94,9 +96,17 @@ namespace DatabaseInterop
                 return _passwordResetModalRepository ?? (_passwordResetModalRepository = new GenericRepository<PasswordResetModal>(dbcontext));
             }
         }
-        #endregion  Public Repos
 
-        public void Commit()
+        public GenericRepository<ApiAuthCodeTableModel> ApiAuthCodeRepository
+        {
+            get
+            {
+                return _apiAuthCodeRepository ?? (_apiAuthCodeRepository = new GenericRepository<ApiAuthCodeTableModel>(dbcontext));
+            }
+        }
+    #endregion  Public Repos
+
+    public void Commit()
         {
             try
             {

@@ -1,0 +1,42 @@
+﻿@using DTO;
+@inject NavigationManager NavMan
+@inject ITaskService TaskServ
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+
+
+<div class="task-container">
+    <h2>@Value.Title</h2>
+    <h8>@Value.Description</h8>
+    <div class="button-container-struct">
+        <div class="button-container">
+            <button class="btn btn-warning" @onclick=ToEdit> Edit </button>
+        </div>
+        <div class="button-container">
+            <button class="btn btn-danger" @onclick=ToDelete> Delete </button>
+        </div>
+        
+    </div>
+    
+
+</div>
+
+@code{
+    [Parameter]
+    public TaskTransferModal Value { get; set; }
+
+
+    private void ToEdit()
+    {
+        NavMan.NavigateTo($"/EditTask/{Value.TaskID}");
+    }
+
+    private async Task ToDelete()
+    {
+        TaskServ.DeleteTask(Value.TaskID);
+
+        NavMan.NavigateTo(NavMan.Uri, true);
+    }
+
+}

@@ -1,6 +1,8 @@
 ﻿@inject IAuthProvider iauth
 @inject NavigationManager navMan
 @layout LoginLayout
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
 @page "/Login"
 
 
@@ -19,7 +21,7 @@
         <a class="forgot-password-href" @onclick=ForgotPassword>Forgot Password</a>
     </div>
 
-    <div class="login-item" style="justify-content:end;display:flex;">
+    <div class="login-item" style="justify-content:end;display:flex;justify-content: flex-end;">
         <button class="btn btn-outline-primary" @onclick="@CheckAuth">
             Log in
         </button>    
@@ -38,10 +40,14 @@
 
 </div>
 
+<ErrorMessageHandler @ref=Handler />
 
 <Loader Show="Loading" />
 
 @code {
+    ErrorMessageHandler Handler { get; set; }
+
+    private string ErrorMessage;
     private bool Loading = false;
     private bool HasAuthed = false;
 
@@ -55,14 +61,38 @@
     public async Task CheckAuth()
     {
         Loading = true;
-        if (String.IsNullOrEmpty(Username) && String.IsNullOrEmpty(Username))
-            HasAuthed = await iauth.CheckAuth("Rlewerenz", "Milkyway2003");
-        else
-            HasAuthed = await iauth.CheckAuth(Username, Password);
+        if (string.IsNullOrEmpty(Username))
+        {
+            Handler.ShowMessage("Username can not be blank");
+            Loading = false;
+            return;
+        }
+        if (string.IsNullOrEmpty(Password))
+        {
+            Handler.ShowMessage("Password can not be blank");
+            Loading = false;
+            return;
+        }
+        try
+        {
+            HasAuthed = await iauth.CheckAuth(Username, Password, BrowserStorage);
+        }
+        catch(Exception ex)
+        {
+            Handler.ShowMessage(ex.Message);
+            Loading = false;
+            return;
+        }
+
         Loading = false;
         if (HasAuthed)
         {
             navMan.NavigateTo("/");
+        }
+        else
+        {
+            Handler.ShowMessage("Invalid username or password");
+            InvokeAsync(StateHasChanged);
         }
     }
 

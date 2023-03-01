@@ -4,6 +4,7 @@ using DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -103,7 +104,6 @@ namespace DataAcess
                 IsValid = userValid.IsValid
             }).First();
         }
-
 
         public UserModal GetUserByUsername(string username)
         {
@@ -232,18 +232,101 @@ namespace DataAcess
                                   where code == PassReset.Code
                                   select PassReset).First();
 
-            if (pass_reset.CreationDate.AddMinutes(60) > DateTime.Now)
+            if (pass_reset.CreationDate.AddMinutes(60) < DateTime.Now)
             {
+                UnitOfWork.PasswordResetModalRepository.Delete(pass_reset);
+                UnitOfWork.Save();
                 throw new Exception($"The code {code}\nhas expired, please request a new code");
             }
 
             var user = GetUserByID(pass_reset.UserID);
+
+            UnitOfWork.PasswordResetModalRepository.Delete(pass_reset);
 
             user.CreatePasswordHash(new_pass);
 
             UnitOfWork.UserRepository.Update(user);
             UnitOfWork.Save();
             return true;
+        }
+
+        public string GetApiCodeForUser(int userID)
+        {
+            try
+            {
+                var user = GetUserByID(userID);
+
+                if(user == null)
+                {
+                    throw new Exception($"Unable to find user with the id {userID}");
+                }
+
+                try
+                {
+                    var others = (from ApiAuth in UnitOfWork.ApiAuthCodeRepository.GetQuery()
+                                  where ApiAuth.UserID == userID
+                                  select ApiAuth).First();
+
+                    if (others != null)
+                    {
+                        if (others.CreationDate.AddDays(7) > DateTime.Now)
+                        {
+                            return others.Code;
+                        }
+
+                        others.Code = RandomChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 30);
+                        UnitOfWork.ApiAuthCodeRepository.Update(others);
+                        UnitOfWork.Save();
+                        return others.Code;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                
+                var codeModel = new ApiAuthCodeTableModel()
+                {
+                    CreationDate = DateTime.Now,
+                    UserID = user.UserID,
+                    Code = RandomChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 30)
+                };
+
+                UnitOfWork.ApiAuthCodeRepository.Insert(codeModel);
+                UnitOfWork.Save();
+                return codeModel.Code;
+            }
+            catch(Exception ex)
+            {
+                return "";
+            }
+
+        }
+
+        public UserTransferModal GetUserByApiCode(string code)
+        {
+            var codeModel = (from ApiAuthCode in UnitOfWork.ApiAuthCodeRepository.GetQuery()
+                             where ApiAuthCode.Code == code
+                             select ApiAuthCode).FirstOrDefault();
+            if (codeModel == null)
+            {
+                throw new Exception($"Unable to find the code {code}");
+            }
+            if (codeModel.CreationDate.AddDays(7) < DateTime.Now)
+            {
+                UnitOfWork.ApiAuthCodeRepository.Delete(codeModel);
+                UnitOfWork.Save();
+                throw new Exception($"The code {code} has expired");
+            }
+            var user = GetUserByID(codeModel.UserID);
+            return GetUserTransferByUsername(user.UserName);
+        }
+
+        public bool CheckIfValid(string username, string email)
+        {
+            return (from Users in UnitOfWork.UserRepository.GetQuery()
+                    where Users.UserName == username || Users.Email == email
+                    select Users).Count() == 0;
         }
     }
 }

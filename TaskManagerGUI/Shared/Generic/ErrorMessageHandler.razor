@@ -1,0 +1,30 @@
+﻿<div class="@ErrorMessageContainerClassCSS">
+    <div class="@ErrorMessageContainerBodyClassCSS">
+        <div class="message-container">
+            <h3>Error</h3>
+            <h10>@ErrorMessage</h10>
+        </div>
+        <CenterHorizontally>
+            <button class="btn btn-outline-primary" @onclick="@(() => {ErrorMessage = null;})">
+                I Understand
+            </button>
+        </CenterHorizontally>
+    </div>
+</div>
+
+
+@code {
+    public void ShowMessage(string message)
+    {
+        ErrorMessage = message;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string? ErrorMessage { get; set; }
+     
+    string ErrorMessageContainerClassCSS => "error-message-container " + (show_error ? "show" : "hide");
+
+    string ErrorMessageContainerBodyClassCSS => "error-message-container-body " + (show_error ? "show" : "hide");
+
+    bool show_error => ErrorMessage != null; 
+}

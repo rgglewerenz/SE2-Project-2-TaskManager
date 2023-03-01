@@ -10,6 +10,8 @@ namespace TasksManagerAPI.Controllers
     {
         private readonly UserBAL _userBAL = new UserBAL();
 
+        #region Get
+
         [HttpGet("GetUsers")]
         public List<UserTransferModal> GetUsers()
         {
@@ -21,6 +23,8 @@ namespace TasksManagerAPI.Controllers
         {
             return _userBAL.GetUserTransferByUsername(username);
         }
+
+        #endregion Get
 
     }
 }

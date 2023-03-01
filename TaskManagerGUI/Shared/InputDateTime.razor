@@ -1,13 +1,13 @@
 ﻿<div class="input-date-container">
     <div class="input-date-item">
         <label>Date</label>
-        <InputDate class="custom_input" @bind-Value="@Value"></InputDate>
+        <InputDate class="custom_input" @bind-Value="@DateVal" style="width: 150px;"></InputDate>
     </div>
 
 
     <div class="input-date-item">
         <label>Time</label>
-        <input type="time" @bind-value="Value" />
+        <input type="time" @bind-value="TimeVal" />
     </div>
 </div>
 
@@ -30,6 +30,33 @@
             ValueChanged.InvokeAsync(value);
         }
     }
+
+    public DateTime DateVal
+    {
+        get => _tbDate ?? new DateTime();
+        set
+        {
+            if (_tbDate == value) return;
+
+            _tbDate = value.Date;
+
+            ValueChanged.InvokeAsync(value + _tbTime.ToTimeSpan());
+        }
+    }
+
+    public DateTime TimeVal
+    {
+        get => DateTime.Now.Date + _tbTime.ToTimeSpan();
+        set
+        {
+            if (_tbTime.ToTimeSpan() == value.TimeOfDay) return;
+
+            _tbTime = TimeOnly.FromTimeSpan(value.TimeOfDay);
+
+            ValueChanged.InvokeAsync((_tbDate ?? DateTime.Now) + value.TimeOfDay);
+        }
+    }
+
 
     [Parameter]
     public EventCallback<DateTime?> ValueChanged { get; set; }

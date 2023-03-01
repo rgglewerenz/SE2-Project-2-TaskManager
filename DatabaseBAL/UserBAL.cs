@@ -31,6 +31,8 @@ namespace DatabaseBAL
         {
             return _usersDA.GetUserByUsername(username);
         }
+
+      
         #endregion Get
 
         #region Add
@@ -80,6 +82,21 @@ namespace DatabaseBAL
         public bool ResetPassword(string pass_reset_code, string new_pass)
         {
             return _usersDA.ResetPassword(pass_reset_code, new_pass);
+        }
+
+        public string GetApiCodeForUser(int userID)
+        {
+            return _usersDA.GetApiCodeForUser(userID);
+        }
+
+        public UserTransferModal GetUserByApiCode(string code)
+        {
+            return _usersDA.GetUserByApiCode(code);
+        }
+
+        public bool CheckIfValid(string username, string email)
+        {
+            return _usersDA.CheckIfValid(username, email);
         }
 
         #endregion Auth

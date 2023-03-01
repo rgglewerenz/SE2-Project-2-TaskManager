@@ -1,0 +1,73 @@
+﻿@page "/EditTask/{TaskID:int}"
+@inject IJSRuntime js
+@inject IAuthProvider authServ
+@inject ITaskService taskServ
+@inject NavigationManager NavMan
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+
+<PageTitle>Edit Task</PageTitle>
+
+<div style="width:100%;text-align:center;">
+    <h3>Edit Task</h3>
+</div>
+
+<TaskForm OnSubmit="OnSubmit" InitialValue="old_modal"/>
+
+<ErrorMessageHandler @ref="ErrorHandler" />
+
+@code {
+    ErrorMessageHandler? ErrorHandler;
+
+    DTO.TaskTransferModal old_modal = new DTO.TaskTransferModal()
+    {
+        recurrenceOptions = new DTO.TaskRecurrenceTransferModal()
+        {
+
+        }    
+    };
+
+    [Parameter] public int TaskID{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await base.OnInitializedAsync();
+            await authServ.CheckLocalStorage(BrowserStorage);
+            if (authServ.UserInfo == null)
+                return;
+            var tasks = await taskServ.GetTasks(authServ.UserInfo.UserID);
+
+            old_modal = tasks.Where(x => x.TaskID == TaskID).First();
+
+            var item = 1;
+        }catch(Exception ex)
+        {
+            await js.InvokeVoidAsync("console.log", ex.ToString());
+            ErrorHandler?.ShowMessage("Unable to connect to server, please try again later");
+        }
+
+    }
+
+    private async Task OnSubmit(DTO.TaskTransferModal new_modal)
+    {
+        try
+        {
+            if (await taskServ.UpdateTask(authServ.UserInfo.UserID, new_modal))
+            {
+                await js.InvokeVoidAsync("alert", "Able to update Task");
+                //Take to home page once submission is complete
+                NavMan.NavigateTo("/");
+            }
+            ErrorHandler?.ShowMessage("Unable to update task, please try again later");
+        }
+        catch(Exception ex)
+        {
+            await js.InvokeVoidAsync("console.log", ex.ToString());
+            ErrorHandler?.ShowMessage("An error has occured, please try again later");
+        }
+
+    }
+
+}

@@ -1,5 +1,6 @@
 ﻿using DatabaseBAL;
 using DatabaseInterop.Models;
+using DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TasksManagerAPI.Controllers
@@ -9,6 +10,8 @@ namespace TasksManagerAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserBAL _userBAL = new UserBAL();
+
+        #region Get
 
         [HttpGet("AuthUser")]
         public bool AuthUser(string username, string password)
@@ -27,6 +30,28 @@ namespace TasksManagerAPI.Controllers
         {
             return _userBAL.ResetPassword(pass_reset_code, new_pass);
         }
+
+        [HttpGet("GetApiCodeForUser/{UserID:int}")]
+        public string GetApiCodeForUser(int UserID)
+        {
+            return _userBAL.GetApiCodeForUser(UserID);
+        }
+
+        [HttpGet("GetUserByApiCode")]
+        public UserTransferModal GetUserByApiCode(string Code)
+        {
+            return _userBAL.GetUserByApiCode(Code);
+        }
+
+        [HttpGet("CheckIfValid")]
+        public bool CheckIfValid(string username, string email)
+        {
+            return _userBAL.CheckIfValid(username, email);
+        }
+
+        #endregion Get
+
+        #region Post
 
         [HttpPost("CreateUser")]
         public bool CreateUser(string username, string password, int age, string email) {
@@ -52,5 +77,8 @@ namespace TasksManagerAPI.Controllers
         {
             return _userBAL.RequestNewEmailValidationCode(userID);
         }
+
+        #endregion Post
+
     }
 }

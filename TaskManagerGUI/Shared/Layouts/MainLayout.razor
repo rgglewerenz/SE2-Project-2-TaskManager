@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject IAuthProvider authServ
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+
 <PageTitle>Task Manager</PageTitle>
 
 <div class="page">
@@ -39,6 +42,13 @@
     private string _userMenuCssClass = "user-menu-container";
 
     private string? UserMenuCssClass => collapseUserMenu ? _userMenuCssClass + " collapse" : _userMenuCssClass;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await authServ.CheckLocalStorage(BrowserStorage);
+
+        await base.OnInitializedAsync();
+    }
 
 
     private void ToggleNavMenu()

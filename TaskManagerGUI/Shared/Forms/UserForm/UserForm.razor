@@ -1,0 +1,110 @@
+﻿<div class="task-form">
+    <EditForm Model="InitialValue" OnValidSubmit="Submit">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+        <div class="form-group">
+            <div class="individual-item" style="text-align:center;width: 100%;">
+                <h4>@Title</h4>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+			<div class="individual-item">
+				<h6>Username</h6>
+			</div>
+			<div class="individual-item">
+                <input type="text" style="width:100%;" placeholder="Enter Username Here" @bind=InitialValue.UserName />
+			</div>
+		</div>
+
+        <div class="form-group">
+			<div class="individual-item">
+				<h6>Email</h6>
+			</div>
+			<div class="individual-item">
+                <input type="text" style="width:100%;" placeholder="Enter Email Here" @bind=InitialValue.Email />
+			</div>
+		</div>
+
+        <div class="form-group">
+            <div class="individual-item" style="display:flex; justify-content:space-between;">
+                <h6>Password</h6> <div><h10>Show Password</h10><input type="checkbox" @bind=show_pass /></div>
+            </div>
+            <div class="individual-item">
+                <input type="@PasswordType" style="width:100%;" placeholder="Enter Password Here" @bind=password />
+            </div>
+        </div>
+
+        
+
+        <div class="form-group">
+            <div class="individual-item">
+                <h6>Age</h6>
+            </div>
+            <div class="individual-item">
+                <input type="number" style="width:100%;" @bind=InitialValue.Age />
+            </div>
+        </div>
+
+        <div class="form-group" style="display:flex;justify-content:center;width: 100%;">
+            <button type="submit" class="btn btn-outline-primary">
+                Sign Up
+            </button>
+        </div>
+
+	</EditForm>
+</div>
+<Loader Show=showLoading />
+<ErrorMessageHandler @ref=Handler />
+@code {
+    [Parameter] public EventCallback<(DTO.UserTransferModal, string)> OnSubmit { get; set; }
+    [Parameter] public string Title { get; set; } = "Enter Title Here";
+
+    ErrorMessageHandler Handler;
+
+    private DTO.UserTransferModal InitialValue = new DTO.UserTransferModal();
+    private string password = "";
+    private string? error_message;
+    private bool show_pass = false;
+    private bool showLoading = false;
+    private string PasswordType => show_pass ? "text" : "password";
+
+
+
+
+    private async Task Submit()
+    {
+        showLoading = true;
+        await InvokeAsync(StateHasChanged);
+        if(InitialValue.Age < 18)
+            Handler.ShowMessage("You must be 18 or older to create an account");
+        else if (CheckPassComplexity(password))
+            await OnSubmit.InvokeAsync((InitialValue, password));
+        else
+            Handler.ShowMessage(error_message??"Unknown Error");
+        showLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+	private bool CheckPassComplexity(string pass){
+        if(!pass.Any(char.IsDigit)){
+            error_message = "Password must contain a number";
+            return false;
+        }
+        if(!pass.Any(char.IsLetter)){
+            error_message = "Password must contain a letter";
+            return false; 
+        }
+        if (!pass.Any(char.IsPunctuation) && !pass.Any(char.IsSymbol))
+        {
+            error_message = "Password must contain a symbol";
+            return false;
+        }
+        if(pass.Length < 10){
+            error_message = "Password must be greater than 10 characters";
+            return false;
+        }
+        return true;
+    }
+}

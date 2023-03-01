@@ -1,4 +1,5 @@
-﻿using Quobject.SocketIoClientDotNet.Client;
+﻿using Microsoft.AspNetCore.Mvc.Formatters;
+using Quobject.SocketIoClientDotNet.Client;
 using System.Web;
 using TaskManagerGUI.Interface;
 
@@ -30,109 +31,123 @@ namespace TaskManagerGUI.Services
         #region Protected Methods
         protected async Task<T> GetInfoFromJson<T>(string url) where T : class
         {
+            var response = await GetResponseMessage(url);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<T>();
+            }
+            Exception? ServerEx;
             try
             {
-                var response = await GetResponseMessage(url);
-                if(response != null)
-                {
-                    return await response.Content.ReadFromJsonAsync<T>();
-                }
-                return default(T);
+                string item = await response?.Content.ReadAsStringAsync();
+                ServerEx = new Exception(item.Split("\n")[0].Split("System.Exception:")[1]);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return default(T);
             }
+            throw ServerEx ?? new Exception("Unknown Error");
         }
+
+
         protected async Task<T> GetInfoNonClass<T>(string url) where T: struct
         {
+            var response = await GetResponseMessage(url);
+            if (response.IsSuccessStatusCode)
+            {
+               return (T)Convert.ChangeType(await response.Content.ReadAsStringAsync(), typeof(T));
+            }
+            Exception? ServerEx;
             try
             {
-                var response = await GetResponseMessage(url);
-                if (response != null)
-                {
-                    return (T)Convert.ChangeType(await response.Content.ReadAsStringAsync(), typeof(T));
-                }
-                return default(T);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return default(T);
-            }
-        }
-        protected async Task<string> GetInfoString(string url)
-        {
-            try
-            {
-                var response = await GetResponseMessage(url);
-                if (response != null)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-                return "";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return "";
-            }
-        }
-
-
-        protected async Task<Recieve> PostInfo<Send, Recieve>(string url, Send item) where Send : class where Recieve : struct
-        {
-            try
-            {
-                var response = await _http.PostAsJsonAsync(url, item);
-                if(response.IsSuccessStatusCode) {
-                    return (Recieve)Convert.ChangeType(await response.Content.ReadAsByteArrayAsync(), typeof(Recieve));
-                }
-                return default;
+                string item = await response?.Content.ReadAsStringAsync();
+                ServerEx = new Exception(item.Split("\n")[0].Split("System.Exception:")[1]);
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                return default(T);
+            }
+            throw ServerEx ?? new Exception("Unknown Error");
+            
+        }
+        protected async Task<string> GetInfoString(string url)
+        {
+            var response = await GetResponseMessage(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            Exception? ServerEx;
+            try
+            {
+                string item = await response?.Content.ReadAsStringAsync();
+                ServerEx = new Exception(item.Split("\n")[0].Split("System.Exception:")[1]);
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+            throw ServerEx ?? new Exception("Unknown Error");
+        }
+
+        protected async Task<Recieve> PostInfo<Send, Recieve>(string url, Send item) where Send : class where Recieve : struct
+        {
+            var response = await _http.PostAsJsonAsync(url, item);
+            if (response.IsSuccessStatusCode)
+            {
+                return (Recieve)Convert.ChangeType(await response.Content.ReadAsStringAsync(), typeof(Recieve));
+            }
+            Exception? ServerEx;
+            try
+            {
+                string str = await response?.Content.ReadAsStringAsync();
+                ServerEx = new Exception(str.Split("\n")[0].Split("System.Exception:")[1]);
+            }
+            catch (Exception ex)
+            {
                 return default;
             }
-
+            throw ServerEx ?? new Exception("Unknown Error");
         }
         protected async Task<Recieve> PostInfoClass<Send, Recieve>(string url, Send item) where Send : class where Recieve : class
         {
+            var response = await _http.PostAsJsonAsync(url, item);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<Recieve>();
+            }
+            Exception? ServerEx;
             try
             {
-                var response = await _http.PostAsJsonAsync(url, item);
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<Recieve>();
-                }
-                return default;
+                string str = await response?.Content.ReadAsStringAsync();
+                ServerEx = new Exception(str.Split("\n")[0].Split("System.Exception:")[1]);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return default;
+                return default(Recieve);
             }
-
+            throw ServerEx ?? new Exception("Unknown Error");
         }
         protected async Task<string> PostInfoString<Send, Recieve>(string url, Send item) where Send : class where Recieve : class
         {
+            var response = await _http.PostAsJsonAsync(url, item);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            Exception? ServerEx;
             try
             {
-                var response = await _http.PostAsJsonAsync(url, item);
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-                return "";
+                string str = await response?.Content.ReadAsStringAsync();
+                ServerEx = new Exception(str.Split("\n")[0].Split("System.Exception:")[1]);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return "";
             }
-
+            throw ServerEx ?? new Exception("Unknown Error");
         }
 
         #endregion Protected Methods
@@ -144,16 +159,12 @@ namespace TaskManagerGUI.Services
             try
             {
                 var response = await _http.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    return response;
-                }
-                return null;
-            }catch(Exception ex)
+                return response;
+            }
+            catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
-                return null;
+                return new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.BadGateway };
             }
         }
         #endregion Private Methods

@@ -1,0 +1,33 @@
+﻿@page "/CreateAccount"
+@layout LoginLayout
+@inject IAuthProvider iauth
+@inject NavigationManager navMan
+
+
+<TaskManagerGUI.Shared.Forms.UserForm.UserForm OnSubmit="@Test" Title="Create Account"/>
+
+
+<ErrorMessageHandler @ref=Handler />
+
+@code {
+    ErrorMessageHandler Handler;
+
+    private async Task Test((DTO.UserTransferModal, string ) items)
+    {
+        await Submit(items.Item1, items.Item2);
+    }
+
+    private async Task Submit(DTO.UserTransferModal userInfo, string password)
+    {
+        try
+        {
+            await iauth.CreateAccount(userInfo, password);
+            navMan.NavigateTo("/Login");
+        }catch(Exception ex)
+        {
+            Handler.ShowMessage(ex.Message);
+            Console.WriteLine(ex);
+        }
+
+    }
+}

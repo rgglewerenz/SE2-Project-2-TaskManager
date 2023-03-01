@@ -1,0 +1,27 @@
+﻿@page "/AddTask"
+@inject IJSRuntime js
+@inject IAuthProvider authServ
+@inject ITaskService taskServ
+@inject NavigationManager NavMan
+
+<PageTitle>Create Task</PageTitle>
+
+<div style="width:100%;text-align:center;">
+    <h3>Create Task</h3>
+</div>
+
+<TaskForm OnSubmit="OnSubmit"/>
+
+@code {
+
+    private async Task OnSubmit(DTO.TaskTransferModal new_modal)
+    {
+        if(await taskServ.CreateTask(authServ.UserInfo.UserID, new_modal))
+        {
+            js.InvokeVoidAsync("alert", "Able to create Task");
+            //Take to home page once submission is complete
+            NavMan.NavigateTo("/");
+        }
+    }
+
+}

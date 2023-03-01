@@ -5,6 +5,7 @@ using ElectronNET.API.Entities;
 using TaskManagerGUI.Authentication;
 using TaskManagerGUI.Interface;
 using TaskManagerGUI.Services;
+using Blazored.LocalStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddElectron();
 builder.WebHost.UseElectron(args);
 
 builder.Services.AddHttpClient();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -27,6 +29,8 @@ if (HybridSupport.IsElectronActive)
     Task.Run(async () => {
         var options = new BrowserWindowOptions();
         options.AutoHideMenuBar = true;
+        options.Width = 1200;
+        options.Height = 1000;
         var window = await Electron.WindowManager.CreateWindowAsync(options);
         window.OnClosed += () => {
             Electron.App.Quit();

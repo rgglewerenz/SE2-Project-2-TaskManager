@@ -79,5 +79,6 @@
     <Build Include="dbo\EmailValidationTable.sql" />
     <Build Include="dbo\TaskRecurrenceMap.sql" />
     <Build Include="dbo\PasswordResetTable.sql" />
+    <Build Include="dbo\ApiAuthCodeTable.sql" />
   </ItemGroup>
 </Project>

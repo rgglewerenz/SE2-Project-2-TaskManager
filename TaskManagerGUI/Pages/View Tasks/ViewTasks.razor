@@ -1,0 +1,33 @@
+﻿@page "/ViewTasks"
+@inject ITaskService TaskServ
+@inject IAuthProvider AuthProvider
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+@using TaskManagerGUI.Shared.Generic;
+@using DTO;
+
+<PaginatedListViewer T="TaskTransferModal" PageSize="10" Items="@items">
+    <ChildFragment>
+        <TaskViewer Value="@context" />
+    </ChildFragment>
+</PaginatedListViewer>
+
+
+@code {
+    private List<TaskTransferModal> items = new List<TaskTransferModal>();
+
+    protected override async Task OnAfterRenderAsync(bool first)
+    {
+        await base.OnAfterRenderAsync(first);
+        if(first){
+            await AuthProvider.CheckLocalStorage(BrowserStorage);
+            if (AuthProvider.UserInfo == null)
+            {
+                return;
+            }
+            items = await TaskServ.GetTasks(AuthProvider.UserInfo.UserID);
+            await InvokeAsync(StateHasChanged);
+        }
+        
+    }
+}

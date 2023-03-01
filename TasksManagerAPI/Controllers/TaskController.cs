@@ -11,6 +11,7 @@ namespace TasksManagerAPI.Controllers
     {
         private TaskBAL _taskBAL = new TaskBAL();
 
+        #region Get
 
         [HttpGet("GetTasks/{UserID:int}")]
         public List<TaskTransferModal> GetTasks(int UserID)
@@ -18,13 +19,16 @@ namespace TasksManagerAPI.Controllers
             return _taskBAL.GetTasksTransferModals(UserID);
         }
 
+        #endregion Get
 
-        [HttpPost("CreateTasks/{UserID:int}")]
+        #region Post
+
+        [HttpPost("CreateTask/{UserID:int}")]
         public bool CreateTask(int UserID, TaskTransferModal taskTransfer) {
             try{
-                _taskBAL.AddTask(taskTransfer, UserID);
-                return true;
-            }catch(Exception ex)
+                return _taskBAL.AddTask(taskTransfer, UserID);
+            }
+            catch(Exception ex)
             {
                 return false;
             }
@@ -35,8 +39,7 @@ namespace TasksManagerAPI.Controllers
         {
             try
             {
-                _taskBAL.UpdateTask(task, UserID);
-                return true;
+                return _taskBAL.UpdateTask(task, UserID);
             }
             catch (Exception ex)
             {
@@ -44,5 +47,24 @@ namespace TasksManagerAPI.Controllers
             }
         }
 
+        #endregion Post
+
+
+        #region Delete
+        [HttpDelete("DeleteTask/{TaskID:int}")]
+        public bool DeleteTask(int TaskID)
+        {
+            try
+            {
+                return _taskBAL.DeleteTask(TaskID);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        #endregion Delete
     }
 }
