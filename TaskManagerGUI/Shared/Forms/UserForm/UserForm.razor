@@ -98,7 +98,7 @@
         }
         if (!pass.Any(char.IsPunctuation) && !pass.Any(char.IsSymbol))
         {
-            error_message = "Password must contain a symbol";
+            error_message = "Password must contain a special character";
             return false;
         }
         if(pass.Length < 10){

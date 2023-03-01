@@ -221,27 +221,27 @@ namespace DataAcess
                 UserID = user.UserID
             };
 
-            UnitOfWork.PasswordResetModalRepository.Insert(pass_reset);
+            UnitOfWork.PasswordResetRepository.Insert(pass_reset);
             UnitOfWork.Save();
             return true;
         }
 
         public bool ResetPassword(string code, string new_pass)
         {
-            var pass_reset = (from PassReset in UnitOfWork.PasswordResetModalRepository.GetQuery()
+            var pass_reset = (from PassReset in UnitOfWork.PasswordResetRepository.GetQuery()
                                   where code == PassReset.Code
-                                  select PassReset).First();
+                                  select PassReset).FirstOrDefault();
 
-            if (pass_reset.CreationDate.AddMinutes(60) < DateTime.Now)
+            if (pass_reset != null && pass_reset.CreationDate.AddMinutes(60) < DateTime.Now)
             {
-                UnitOfWork.PasswordResetModalRepository.Delete(pass_reset);
+                UnitOfWork.PasswordResetRepository.Delete(pass_reset);
                 UnitOfWork.Save();
                 throw new Exception($"The code {code}\nhas expired, please request a new code");
             }
 
             var user = GetUserByID(pass_reset.UserID);
 
-            UnitOfWork.PasswordResetModalRepository.Delete(pass_reset);
+            UnitOfWork.PasswordResetRepository.Delete(pass_reset);
 
             user.CreatePasswordHash(new_pass);
 

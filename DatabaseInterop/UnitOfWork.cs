@@ -89,7 +89,7 @@ namespace DatabaseInterop
             }
         }
 
-        public GenericRepository<PasswordResetModal> PasswordResetModalRepository
+        public GenericRepository<PasswordResetModal> PasswordResetRepository
         {
             get
             {
