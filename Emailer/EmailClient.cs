@@ -36,13 +36,14 @@ namespace Emailer
             };
         }
 
-        public async Task SendEmail(string to, string? subject, string? body)
+        public async Task SendEmail(string to, string? subject, string? body, bool IsHTML = false)
         {
             var message = new MailMessage()
             {
                 From = new MailAddress(_credentials.Email),
                 Body = body,
                 Subject = subject,
+                IsBodyHtml = IsHTML
             };
 
             message.To.Add(to);
