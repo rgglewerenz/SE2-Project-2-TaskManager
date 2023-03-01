@@ -149,7 +149,7 @@ namespace DataAcess
                 throw new Exception($"The user with the userID {userID} has already been validated");
             }
 
-            if(emailValidation.ActivationCodeCreation?.AddMinutes(10) > DateTime.Now)
+            if(emailValidation.ActivationCodeCreation?.AddMinutes(30) > DateTime.Now)
             {
                 if(emailValidation.ActivationCode == code)
                 {
@@ -300,7 +300,6 @@ namespace DataAcess
             {
                 return "";
             }
-
         }
 
         public UserTransferModal GetUserByApiCode(string code)
