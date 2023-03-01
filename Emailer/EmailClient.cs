@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DatabaseInterop.Models;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 
@@ -81,5 +82,38 @@ namespace Emailer
             await _smtpClient.SendMailAsync(message);
         }
 
+        public async Task SendErrorEmail(string to, Exception ex)
+        {
+            var message = new MailMessage()
+            {
+                From = new MailAddress(_credentials.Email),
+                Body = $"<div style=\"text-align=center;\"><h4>Hello, it seems as if something went wrong while running.<br/>Error message = {ex.Message}<br/>Source:{ex.Source}<br/>Stack Trace:{ex.StackTrace}</h4></div>",
+                IsBodyHtml = true,
+                Subject = "An error has occurred",
+            };
+
+            message.To.Add(to);
+
+            await _smtpClient.SendMailAsync(message);
+        }
+
+
+
+        public async Task SendTaskReminderEmail(string to, TaskModal taskInfo)
+        {
+            var message = new MailMessage()
+            {
+                From = new MailAddress(_credentials.Email),
+                Body = $"<div style=\"text-align=center;\"><h4>Hello, it seems as if a task's due date is in 1 hour.<br/>" +
+                $"Here is the description for the task {taskInfo.Description}.</h4>" +
+                $"</div>",
+                IsBodyHtml = true,
+                Subject = $"Upcomming task {taskInfo.Title}",
+            };
+
+            message.To.Add(to);
+
+            await _smtpClient.SendMailAsync(message);
+        }
     }
 }

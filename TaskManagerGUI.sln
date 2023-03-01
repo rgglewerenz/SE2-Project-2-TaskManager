@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseBAL", "DatabaseBAL\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseEnums", "DatabaseEnums\DatabaseEnums.csproj", "{8487BF12-2092-4753-9519-4C2B114BC7F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emailer", "Emailer\Emailer.csproj", "{66B00A19-965B-4FEF-B7E5-F17CE5979D23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emailer", "Emailer\Emailer.csproj", "{66B00A19-965B-4FEF-B7E5-F17CE5979D23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskChecker", "TaskChecker\TaskChecker.csproj", "{7CBBB69B-8F71-4828-A583-CC61DA302DDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{66B00A19-965B-4FEF-B7E5-F17CE5979D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66B00A19-965B-4FEF-B7E5-F17CE5979D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66B00A19-965B-4FEF-B7E5-F17CE5979D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CBBB69B-8F71-4828-A583-CC61DA302DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CBBB69B-8F71-4828-A583-CC61DA302DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CBBB69B-8F71-4828-A583-CC61DA302DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CBBB69B-8F71-4828-A583-CC61DA302DDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

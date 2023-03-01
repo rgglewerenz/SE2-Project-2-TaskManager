@@ -361,8 +361,10 @@ namespace DataAcess
             {
                 return false;
             }
-           
-            
+        }
+
+        public EmailClient GetEmailClient() { 
+            return _emailer; 
         }
     }
 }

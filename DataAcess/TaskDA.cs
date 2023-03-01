@@ -255,5 +255,29 @@ namespace DataAcess
             }
 
         }
+
+        public List<TaskRecurrenceModal> GetTaskRecurrenceModals()
+        {
+            return (from Tasks in UnitOfWork.TaskRecurranceRepository.GetQuery()
+                    select Tasks).ToList();
+        }
+
+        public UserModal GetUserFromTaskID(int taskID)
+        {
+            var userID = (from Task in UnitOfWork.UserTaskMapRepository.GetQuery()
+                         where Task.TaskID == taskID
+                         select Task.UserID).First();
+
+            return (from User in UnitOfWork.UserRepository.GetQuery()
+                    where User.UserID == userID
+                    select User).First();
+        }
+
+        public TaskModal GetTaskModalByID(int taskID)
+        {
+            return (from Task in UnitOfWork.TaskRepository.GetQuery()
+                    where Task.TaskID == taskID
+                    select Task).First();
+        }
     }
 }
