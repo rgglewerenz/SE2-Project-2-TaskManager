@@ -205,13 +205,16 @@ namespace DataAcess
             throw new Exception($"This account with the userID = {user.UserID} does not have a valid email");
         }
 
-        public bool RequestNewPasswordCode(int userID)
+        public bool RequestNewPasswordCode(string email)
         {
-            var user = GetUserByID(userID);
+            var user = (from User in UnitOfWork.UserRepository.GetQuery()
+                        where User.Email == email
+                        select User).FirstOrDefault();
 
-            if(user == null)
+
+            if (user == null)
             {
-                return false;
+                throw new Exception($"Unable to find user with the email: {email}");
             }
 
             var pass_reset = new PasswordResetModal()

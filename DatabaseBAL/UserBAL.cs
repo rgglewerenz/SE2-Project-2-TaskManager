@@ -74,9 +74,9 @@ namespace DatabaseBAL
             return _usersDA.GetUserTransferByUsername(username);
         }
 
-        public bool RequestNewPasswordCode(int userID)
+        public bool RequestNewPasswordCode(string email)
         {
-            return _usersDA.RequestNewPasswordCode(userID);
+            return _usersDA.RequestNewPasswordCode(email);
         }
 
         public bool ResetPassword(string pass_reset_code, string new_pass)

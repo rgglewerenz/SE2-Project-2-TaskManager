@@ -13,5 +13,7 @@ namespace TaskManagerGUI.Authentication
         Task CreateAccount(UserTransferModal userInfo, string password);
         public Task Logout(ProtectedLocalStorage localStorage);
         public Task PutInLocalStorage(ProtectedLocalStorage localStorage);
+        Task RequestNewPasscode(string email);
+        Task ResetPassword(string code, string new_pass);
     }
 }

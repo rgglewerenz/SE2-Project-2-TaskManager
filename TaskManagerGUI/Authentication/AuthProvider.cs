@@ -110,6 +110,20 @@ namespace TaskManagerGUI.Authentication
 
         }
 
+        public async Task RequestNewPasscode(string email)
+        {
+            var result = await GetInfoNonClass<bool>(BaseURL + $"Auth/RequestNewPasswordCode?email={email}");
+            if (!result)
+                throw new Exception("Unable to send reset code, please try again later");
+        }
+
+        public async Task ResetPassword(string code, string new_pass)
+        {
+            var result = await GetInfoNonClass<bool>(BaseURL + $"Auth/ResetPassword?pass_reset_code={code}&new_pass={new_pass}");
+            if (!result)
+                throw new Exception("Unable to reset password, please try again later");
+        }
+
         #region Private Methods
         private async Task GetUserInstance(string username)
         {

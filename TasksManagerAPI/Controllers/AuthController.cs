@@ -20,9 +20,9 @@ namespace TasksManagerAPI.Controllers
         }
 
         [HttpGet("RequestNewPasswordCode")]
-        public bool RequestNewPasswordCode(int UserID)
+        public bool RequestNewPasswordCode(string email)
         {
-            return _userBAL.RequestNewPasswordCode(UserID);
+            return _userBAL.RequestNewPasswordCode(email);
         }
 
         [HttpGet("ResetPassword")]
