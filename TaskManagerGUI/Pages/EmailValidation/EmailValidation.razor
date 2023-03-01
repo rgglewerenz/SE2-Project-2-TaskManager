@@ -1,13 +1,71 @@
 ﻿@page "/EmailValidation/{code}"
+@page "/EmailValidation"
 @layout LoginLayout
+@inject IAuthProvider authProvider
+@inject IJSRuntime js
+@inject NavigationManager NavMan
 
-<div>
-    Todo
-</div>
+@if(code == null)
+{
+    <div class="validation-form">
+        <div class="individual-item">
+            <h6>Username</h6>
+            <input type="text" @bind=Username />
+        </div>
 
+        <div class="individual-item">
+            <button @onclick=RequestNewCode  class="btn btn-outline-primary"> 
+                Request new code
+            </button>
+        </div>
+    </div>
+}
+
+
+<Loader Show=show_loading />
+<ErrorMessageHandler @ref=Handler />
 @code {
     [Parameter] public string code { get; set; }
 
-    
+    private ErrorMessageHandler Handler;
+
+    private string Username;
+    bool show_loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (code != null)
+        {
+            try
+            {
+                await authProvider.ValidateEmail(code); 
+                await js.InvokeVoidAsync("alert", "Able to validate email.\nPlease try an login with your credentials");
+                NavMan.NavigateTo("/Login");
+            }
+            catch (Exception ex)
+            {
+                code = null;
+                Handler.ShowMessage(ex.Message);
+            }
+        }
+        await base.OnInitializedAsync();
+    }
+
+    private async Task RequestNewCode()
+    {
+        show_loading = true;
+        await InvokeAsync(StateHasChanged);
+        try
+        {
+            await authProvider.RequestNewEmailValidationCode(Username);
+            show_loading = true;
+            await InvokeAsync(StateHasChanged);
+            await js.InvokeVoidAsync("alert", "A code should be sent to the email linked with your account");
+            NavMan.NavigateTo("/Login");
+        }catch(Exception ex)
+        {
+            Handler.ShowMessage(ex.Message);   
+        }    }   
+
 
 }

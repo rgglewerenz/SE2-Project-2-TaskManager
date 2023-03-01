@@ -124,6 +124,27 @@ namespace TaskManagerGUI.Authentication
                 throw new Exception("Unable to reset password, please try again later");
         }
 
+        public async Task ValidateEmail(string code)
+        {
+            var result = await PostInfo<dynamic,bool>(BaseURL + $"Auth/ValidateEmail?code={code}", new {});
+            if (!result)
+                throw new Exception("Unable validate the email, please request a new code");
+        }
+
+
+        public async Task RequestNewEmailValidationCode(string username)
+        {
+            var result = await PostInfo<dynamic, bool>(BaseURL + $"Auth/RequestNewEmailValidationCode?username={username}", new { });
+            if (!result)
+                throw new Exception("Unable validate the email, please request a new code");
+        }
+
+        public async Task<bool> CheckIfUserEmailValid(string username)
+        {
+            var result = await GetInfoNonClass<bool>(BaseURL + $"Auth/CheckIfUserEmailValid?username={username}");
+            return result;
+        }
+
         #region Private Methods
         private async Task GetUserInstance(string username)
         {

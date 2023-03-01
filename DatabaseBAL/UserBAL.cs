@@ -61,21 +61,14 @@ namespace DatabaseBAL
             return _usersDA.AuthorizeUser(username, password);
         }
 
-        public bool ValidateEmail(int userID, string code)
+        public bool ValidateEmail(string code)
         {
-            return _usersDA.ValidateEmail(userID, code);
+            return _usersDA.ValidateEmail(code);
         }
 
-        public async Task<bool> RequestNewEmailValidationCode(int userID)
+        public async Task<bool> RequestNewEmailValidationCode(string username)
         {
-            try
-            {
-                return await _usersDA.RequestNewEmailValidationCode(userID);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return await _usersDA.RequestNewEmailValidationCode(username);
         }
 
         public UserTransferModal GetUserTransferByUsername(string username)
@@ -111,6 +104,11 @@ namespace DatabaseBAL
         public async Task<bool> TestMailer(string to, string subject, string body)
         {
             return await _usersDA.TestMailer(to, subject, body);
+        }
+
+        public bool CheckIfUserEmailValid(string username)
+        {
+            return _usersDA.CheckIfUserEmailValid(username);
         }
 
         #endregion Auth

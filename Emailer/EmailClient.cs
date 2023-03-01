@@ -97,8 +97,6 @@ namespace Emailer
             await _smtpClient.SendMailAsync(message);
         }
 
-
-
         public async Task SendTaskReminderEmail(string to, TaskModal taskInfo)
         {
             var message = new MailMessage()
