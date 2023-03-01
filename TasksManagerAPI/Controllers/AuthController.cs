@@ -9,9 +9,20 @@ namespace TasksManagerAPI.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly UserBAL _userBAL = new UserBAL();
+        private readonly UserBAL _userBAL;
+
+        public AuthController(IConfiguration _config) {
+            _userBAL = new UserBAL(_config);
+        }
 
         #region Get
+
+        [HttpGet("TestMailer")]
+        public async Task<bool> TestMailer(string to, string subject, string body)
+        {
+            return await _userBAL.TestMailer(to, subject, body);
+        }
+
 
         [HttpGet("AuthUser")]
         public bool AuthUser(string username, string password)
@@ -20,9 +31,9 @@ namespace TasksManagerAPI.Controllers
         }
 
         [HttpGet("RequestNewPasswordCode")]
-        public bool RequestNewPasswordCode(string email)
+        public async Task<bool> RequestNewPasswordCode(string email)
         {
-            return _userBAL.RequestNewPasswordCode(email);
+            return await _userBAL.RequestNewPasswordCode(email);
         }
 
         [HttpGet("ResetPassword")]
@@ -54,7 +65,7 @@ namespace TasksManagerAPI.Controllers
         #region Post
 
         [HttpPost("CreateUser")]
-        public bool CreateUser(string username, string password, int age, string email) {
+        public async Task<bool> CreateUser(string username, string password, int age, string email) {
             UserModal new_user = new UserModal()
             {
                 Age= age,
@@ -62,8 +73,7 @@ namespace TasksManagerAPI.Controllers
                 UserName= username,
             };
             new_user.CreatePasswordHash(password);
-            _userBAL.AddUser(new_user);
-            return true;
+            return await _userBAL.AddUser(new_user);
         }
 
         [HttpPost("ValidateEmail")]
@@ -73,9 +83,9 @@ namespace TasksManagerAPI.Controllers
         }
 
         [HttpPost("RequestNewEmailValidationCode")]
-        public bool RequestNewEmailValidationCode(int userID)
+        public async Task<bool> RequestNewEmailValidationCode(int userID)
         {
-            return _userBAL.RequestNewEmailValidationCode(userID);
+            return await _userBAL.RequestNewEmailValidationCode(userID);
         }
 
         #endregion Post

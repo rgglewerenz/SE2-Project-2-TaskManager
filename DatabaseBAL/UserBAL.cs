@@ -2,6 +2,7 @@
 using DatabaseInterop;
 using DatabaseInterop.Models;
 using DTO;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,16 @@ namespace DatabaseBAL
 {
     public class UserBAL
     {
-        private readonly UsersDA _usersDA = new UsersDA(new UnitOfWork());
+        private readonly UsersDA _usersDA;
+
+
+        private IConfiguration config;
+
+        public UserBAL(IConfiguration config)
+        {
+            this.config = config;
+            _usersDA = new UsersDA(new UnitOfWork(), config);
+        }
 
         #region Get
         public List<UserModal> GetUsers()
@@ -37,9 +47,9 @@ namespace DatabaseBAL
 
         #region Add
 
-        public void AddUser(UserModal user)
+        public async Task<bool> AddUser(UserModal user)
         {
-            _usersDA.AddUser(user);
+            return await _usersDA.AddUser(user);
         }
 
         #endregion Add
@@ -56,12 +66,11 @@ namespace DatabaseBAL
             return _usersDA.ValidateEmail(userID, code);
         }
 
-        public bool RequestNewEmailValidationCode(int userID)
+        public async Task<bool> RequestNewEmailValidationCode(int userID)
         {
             try
             {
-                _usersDA.RequestNewEmailValidationCode(userID);
-                return true;
+                return await _usersDA.RequestNewEmailValidationCode(userID);
             }
             catch (Exception ex)
             {
@@ -74,9 +83,9 @@ namespace DatabaseBAL
             return _usersDA.GetUserTransferByUsername(username);
         }
 
-        public bool RequestNewPasswordCode(string email)
+        public async Task<bool> RequestNewPasswordCode(string email)
         {
-            return _usersDA.RequestNewPasswordCode(email);
+            return await _usersDA.RequestNewPasswordCode(email);
         }
 
         public bool ResetPassword(string pass_reset_code, string new_pass)
@@ -97,6 +106,11 @@ namespace DatabaseBAL
         public bool CheckIfValid(string username, string email)
         {
             return _usersDA.CheckIfValid(username, email);
+        }
+
+        public async Task<bool> TestMailer(string to, string subject, string body)
+        {
+            return await _usersDA.TestMailer(to, subject, body);
         }
 
         #endregion Auth

@@ -1,6 +1,8 @@
 ﻿using DatabaseInterop;
 using DatabaseInterop.Models;
 using DTO;
+using Emailer;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +34,15 @@ namespace DataAcess
         }
         #endregion Private Random String Gen
 
-        public UsersDA(IUnitOfWork unitOfWork): 
+        EmailClient _emailer;
+
+        public UsersDA(IUnitOfWork unitOfWork, IConfiguration _config): 
             base (unitOfWork) 
-        { 
+        {
+            _emailer = new EmailClient(_config);
         }
 
-        public void AddUser(UserModal user)
+        public async Task<bool> AddUser(UserModal user)
         {
             UnitOfWork.UserRepository.Insert(user);
             UnitOfWork.Save();
@@ -52,6 +57,10 @@ namespace DataAcess
 
             UnitOfWork.EmailValidationRepository.Insert(email);
             UnitOfWork.Save();
+
+            await _emailer.SendEmailValidationEmail(user.Email, email.ActivationCode);
+
+            return true;
         }
 
         public List<UserModal> GetUsers()
@@ -165,7 +174,7 @@ namespace DataAcess
             throw new Exception("Code has expired Generate a new code before proceeding");
         }
 
-        public void RequestNewEmailValidationCode(int userID) {
+        public async Task<bool> RequestNewEmailValidationCode(int userID) {
             try
             {
                 var emailValidation = (from Validation in UnitOfWork.EmailValidationRepository.GetQuery()
@@ -180,6 +189,13 @@ namespace DataAcess
                 emailValidation.ActivationCode = Generate6DigitCode();
                 UnitOfWork.EmailValidationRepository.Update(emailValidation);
                 UnitOfWork.Save();
+
+
+                var user = UnitOfWork.UserRepository.Get(x => x.UserID == userID).First();
+
+                await _emailer.SendEmailValidationEmail(emailValidation.ActivationCode, user.Email);
+
+                return true;
             }
             catch(Exception ex)
             {
@@ -205,7 +221,7 @@ namespace DataAcess
             throw new Exception($"This account with the userID = {user.UserID} does not have a valid email");
         }
 
-        public bool RequestNewPasswordCode(string email)
+        public async Task<bool> RequestNewPasswordCode(string email)
         {
             var user = (from User in UnitOfWork.UserRepository.GetQuery()
                         where User.Email == email
@@ -226,6 +242,9 @@ namespace DataAcess
 
             UnitOfWork.PasswordResetRepository.Insert(pass_reset);
             UnitOfWork.Save();
+
+            await _emailer.SendPasswordResetEmail(user.Email, pass_reset.Code);
+
             return true;
         }
 
@@ -329,6 +348,21 @@ namespace DataAcess
             return (from Users in UnitOfWork.UserRepository.GetQuery()
                     where Users.UserName == username || Users.Email == email
                     select Users).Count() == 0;
+        }
+
+        public async Task<bool> TestMailer(string to, string subject, string body)
+        {
+            try
+            {
+                await _emailer.SendEmail(to, subject, body);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+           
+            
         }
     }
 }

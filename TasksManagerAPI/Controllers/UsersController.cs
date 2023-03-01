@@ -8,7 +8,12 @@ namespace TasksManagerAPI.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserBAL _userBAL = new UserBAL();
+        private readonly UserBAL _userBAL;
+
+        public UsersController(IConfiguration _config)
+        {
+            _userBAL = new UserBAL(_config);
+        }
 
         #region Get
 
