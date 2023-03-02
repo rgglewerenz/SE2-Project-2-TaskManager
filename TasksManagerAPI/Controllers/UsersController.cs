@@ -1,6 +1,7 @@
 ﻿using DatabaseBAL;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace TasksManagerAPI.Controllers
 {
@@ -20,6 +21,8 @@ namespace TasksManagerAPI.Controllers
         [HttpGet("GetUsers")]
         public List<UserTransferModal> GetUsers()
         {
+
+            var host = Dns.GetHostEntry(Dns.GetHostName());
             return _userBAL.GetTransferModalUsers();
         }
 
