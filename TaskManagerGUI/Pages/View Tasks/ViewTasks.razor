@@ -13,19 +13,29 @@
 </PaginatedListViewer>
 
 
+<Loader Show="@show_load" />
+
 @code {
+    private bool show_load;
+
     private List<TaskTransferModal> items = new List<TaskTransferModal>();
 
     protected override async Task OnAfterRenderAsync(bool first)
     {
         await base.OnAfterRenderAsync(first);
         if(first){
+            show_load = true;
+            await InvokeAsync(StateHasChanged);
             await AuthProvider.CheckLocalStorage(BrowserStorage);
             if (AuthProvider.UserInfo == null)
             {
+                show_load = false;
+                await InvokeAsync(StateHasChanged);
                 return;
             }
             items = await TaskServ.GetTasks(AuthProvider.UserInfo.UserID);
+            await InvokeAsync(StateHasChanged);
+            show_load = false;
             await InvokeAsync(StateHasChanged);
         }
         
