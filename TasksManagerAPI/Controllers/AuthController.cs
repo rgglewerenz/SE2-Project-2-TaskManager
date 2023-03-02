@@ -24,11 +24,10 @@ namespace TasksManagerAPI.Controllers
         }
 
         [HttpGet("CheckIfUserEmailValid")]
-        public async Task<bool> CheckIfUserEmailValid(string username)
+        public bool CheckIfUserEmailValid(string username)
         {
             return _userBAL.CheckIfUserEmailValid(username);
         }
-
 
         [HttpGet("AuthUser")]
         public bool AuthUser(string username, string password)

@@ -16,7 +16,7 @@ namespace TaskChecker
 {
     public class TaskProgram
     {
-        private readonly TaskDA taskDA = new TaskDA(new UnitOfWork());
+        private readonly TaskDA taskDA;
         private readonly UsersDA usersDA;
         private TimeSpan CheckDelay = TimeSpan.FromMinutes(1);
         private DateTime StartCheck = DateTime.Now;
@@ -24,7 +24,8 @@ namespace TaskChecker
         public TaskProgram(IConfiguration _config)
         {
 
-            usersDA = new UsersDA(new UnitOfWork(), _config);
+            usersDA = new UsersDA(new UnitOfWork(_config), _config);
+            taskDA = new TaskDA(new UnitOfWork(_config));
         }
 
         public async Task Run()

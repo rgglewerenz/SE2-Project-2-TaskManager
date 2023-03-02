@@ -1,5 +1,6 @@
 ﻿using DatabaseInterop.Models;
 using DTO;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,11 +18,11 @@ namespace DatabaseInterop
 
         private DbContextTransaction _transaction;
 
-        public UnitOfWork()
+        public UnitOfWork(IConfiguration _config)
         {
             try{
                 SqlProviderServices _ = SqlProviderServices.Instance;
-                dbcontext= new MainContext();
+                dbcontext= new MainContext(_config);
             }
             catch(Exception ex)
             {

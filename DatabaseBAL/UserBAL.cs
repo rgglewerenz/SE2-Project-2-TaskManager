@@ -21,7 +21,7 @@ namespace DatabaseBAL
         public UserBAL(IConfiguration config)
         {
             this.config = config;
-            _usersDA = new UsersDA(new UnitOfWork(), config);
+            _usersDA = new UsersDA(new UnitOfWork(config), config);
         }
 
         #region Get

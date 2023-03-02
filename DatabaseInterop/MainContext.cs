@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using DatabaseInterop.Models.Mapping;
 using DatabaseInterop.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace DatabaseInterop
 {
     public class MainContext: DbContext
     {
-        private static string ConnectionString = "Server=localhost;Database=master;Trusted_Connection=True;TrustServerCertificate=True;";
+        private static string GetConnectionString(IConfiguration _config)
+        {
+            return _config.GetSection("ConnectionStrings").GetSection("Main").Value ?? "";
+        }
 
-        
-
-        public MainContext() : base(ConnectionString){
-        
+        public MainContext(IConfiguration _config) : base(GetConnectionString(_config)) {
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -30,5 +31,8 @@ namespace DatabaseInterop
             modelBuilder.Configurations.Add(new PasswordResetModalMap());
             modelBuilder.Configurations.Add(new ApiAuthCodeTableMap());
         }
+
+
+
     }
 }
