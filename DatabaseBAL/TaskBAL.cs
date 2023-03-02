@@ -2,6 +2,7 @@
 using DatabaseInterop;
 using DatabaseInterop.Models;
 using DTO;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,12 @@ namespace DatabaseBAL
 {
     public class TaskBAL
     {
-        private readonly TaskDA _tasksDA = new TaskDA(new UnitOfWork());
+        private readonly TaskDA _tasksDA;
+
+        public TaskBAL(IConfiguration _config)
+        {
+            _tasksDA = new TaskDA(new UnitOfWork(_config));
+        }
 
 
         public List<TaskModal> GetTasks(int userID)

@@ -3,6 +3,7 @@
 @layout LoginLayout
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject ProtectedLocalStorage BrowserStorage
+@inject IJSRuntime js
 @page "/Login"
 
 
@@ -75,7 +76,14 @@
         }
         try
         {
-            HasAuthed = await iauth.CheckAuth(Username, Password, BrowserStorage);
+            if (await iauth.CheckIfUserEmailValid(Username))
+                HasAuthed = await iauth.CheckAuth(Username, Password, BrowserStorage);
+            else
+            {
+                await js.InvokeVoidAsync("alert", "This account's email has not been validated.\nPlease click ok to be redirected to a form to get a new activation code, or check your email");
+                navMan.NavigateTo("/EmailValidation");
+            }
+                
         }
         catch(Exception ex)
         {

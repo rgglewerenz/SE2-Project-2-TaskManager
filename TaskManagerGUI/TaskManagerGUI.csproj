@@ -5,9 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Pages\EmailValidation\EmailValidation.razor.css" />
     <None Remove="Shared\Forms\TaskForm\MultipleCheckBox\MultipleCheckBox.razor.css" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\EmailValidation\EmailValidation.razor.css" />
     <Content Include="Shared\Forms\TaskForm\MultipleCheckBox\MultipleCheckBox.razor.css" />
   </ItemGroup>
   <ItemGroup>

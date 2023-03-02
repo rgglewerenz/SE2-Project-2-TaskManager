@@ -100,9 +100,20 @@ namespace DataAcess
             var userInfo = (from Users in UnitOfWork.UserRepository.GetQuery()
                             where Users.UserName == username
                             select Users);
+
             var users = (from info in UnitOfWork.EmailValidationRepository.GetQuery()
                          where userInfo.Select(x => x.UserID == info.UserID).Count() > 0
                          select info);
+
+            if (!userInfo.Any())
+            {
+                throw new Exception($"No users matching {username} exists");
+            }
+
+            if (!users.Any())
+            {
+                throw new Exception($"User with username {username} does not have an email validation entry");
+            }
 
             return users.Join(userInfo, x => x.UserID, x => x.UserID, (userValid, userInfo) => new UserTransferModal()
             {
@@ -146,64 +157,90 @@ namespace DataAcess
             }
         }
 
-        public bool ValidateEmail(int userID, string code)
+        public bool ValidateEmail(string code)
         {
-            var user = this.GetUserByID(userID);
-
-            var emailValidation = (from Validation in UnitOfWork.EmailValidationRepository.GetQuery()
-                                   where Validation.UserID == userID
-                                   select Validation).First();
-
-            if(emailValidation.IsValid) {
-                throw new Exception($"The user with the userID {userID} has already been validated");
-            }
-
-            if(emailValidation.ActivationCodeCreation?.AddMinutes(30) > DateTime.Now)
-            {
-                if(emailValidation.ActivationCode == code)
-                {
-                    emailValidation.IsValid = true;
-                    emailValidation.ActivationCodeCreation = null;
-                    emailValidation.ActivationCode = null;
-                    UnitOfWork.EmailValidationRepository.Update(emailValidation);
-                    UnitOfWork.Save();
-                    return true;
-                }
-                return false;
-            }
-            throw new Exception("Code has expired Generate a new code before proceeding");
-        }
-
-        public async Task<bool> RequestNewEmailValidationCode(int userID) {
             try
             {
                 var emailValidation = (from Validation in UnitOfWork.EmailValidationRepository.GetQuery()
-                                       where Validation.UserID == userID
+                                       where Validation.ActivationCode == code
                                        select Validation).First();
-                if (emailValidation.IsValid)
+
+                if (emailValidation.ActivationCodeCreation?.AddMinutes(30) > DateTime.Now)
                 {
-                    throw new Exception($"The user with the userID {userID} has already been validated");
+                    if (emailValidation.ActivationCode == code)
+                    {
+                        emailValidation.IsValid = true;
+                        emailValidation.ActivationCodeCreation = null;
+                        emailValidation.ActivationCode = null;
+                        UnitOfWork.EmailValidationRepository.Update(emailValidation);
+                        UnitOfWork.Save();
+                        return true;
+                    }
+                    return false;
                 }
-                emailValidation.ActivationCodeCreation = DateTime.Now;
-                emailValidation.IsValid = false;
-                emailValidation.ActivationCode = Generate6DigitCode();
-                UnitOfWork.EmailValidationRepository.Update(emailValidation);
+                UnitOfWork.EmailValidationRepository.Delete(emailValidation);
                 UnitOfWork.Save();
+                throw new Exception("Code has expired Generate a new code before proceeding");
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"No emailvalidation found with the code {code}");
+            }
+        }
+
+        public async Task<bool> RequestNewEmailValidationCode(string username) {
+            try
+            {
+                var user = (from Users in UnitOfWork.UserRepository.GetQuery()
+                            where Users.UserName == username
+                            select Users).First();
+                try
+                {
+                    var emailValidation = (from Validation in UnitOfWork.EmailValidationRepository.GetQuery()
+                                           where Validation.UserID == user.UserID
+                                           select Validation).First();
+
+                    if (emailValidation.IsValid)
+                    {
+                        throw new Exception($"The user with the username {user.UserName} has already been validated");
+                    }
 
 
-                var user = UnitOfWork.UserRepository.Get(x => x.UserID == userID).First();
+                    emailValidation.ActivationCodeCreation = DateTime.Now;
+                    emailValidation.IsValid = false;
+                    emailValidation.ActivationCode = Generate6DigitCode();
+                    UnitOfWork.EmailValidationRepository.Update(emailValidation);
+                    UnitOfWork.Save();
 
-                await _emailer.SendEmailValidationEmail(emailValidation.ActivationCode, user.Email);
 
+                    await _emailer.SendEmailValidationEmail(user.Email, emailValidation.ActivationCode);
+                }
+                catch(Exception ex)
+                {
+                    var emailValidation = new EmailValidationModal();
+                    emailValidation.ActivationCodeCreation = DateTime.Now;
+                    emailValidation.IsValid = false;
+                    emailValidation.ActivationCode = Generate6DigitCode();
+                    emailValidation.UserID = user.UserID;
+
+                    UnitOfWork.EmailValidationRepository.Insert(emailValidation);
+                    UnitOfWork.Save();
+                    
+                    await _emailer.SendEmailValidationEmail(user.Email, emailValidation.ActivationCode);
+                }
                 return true;
             }
             catch(Exception ex)
             {
-                if(ex.Message == $"The user with the userID {userID} has already been validated")
+                if(ex.Message == $"The user with the username {username} has already been validated")
                 {
                     throw ex;
                 }
-                throw new Exception($"Unable to find an email validation for the userID: {userID}");
+                if(ex.Message == "Sequence contains no elements")
+                {
+                    throw new Exception($"No user with the username {username} exists");
+                }
+                throw new Exception($"Unable to find an email validation for the username: {username}");
             }
         }
 
@@ -365,6 +402,12 @@ namespace DataAcess
 
         public EmailClient GetEmailClient() { 
             return _emailer; 
+        }
+
+        public bool CheckIfUserEmailValid(string username)
+        {
+            var user = GetUserTransferByUsername(username);
+            return user.IsValid;
         }
     }
 }

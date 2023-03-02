@@ -16,21 +16,26 @@ namespace TaskChecker
 {
     public class TaskProgram
     {
-        private readonly TaskDA taskDA = new TaskDA(new UnitOfWork());
+        private readonly TaskDA taskDA;
         private readonly UsersDA usersDA;
+        private TimeSpan CheckDelay = TimeSpan.FromMinutes(1);
+        private DateTime StartCheck = DateTime.Now;
+
         public TaskProgram(IConfiguration _config)
         {
 
-            usersDA = new UsersDA(new UnitOfWork(), _config);
+            usersDA = new UsersDA(new UnitOfWork(_config), _config);
+            taskDA = new TaskDA(new UnitOfWork(_config));
         }
 
         public async Task Run()
         {
             var recurranceOptions = taskDA.GetTaskRecurrenceModals();
-            var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
+            var timer = new PeriodicTimer(CheckDelay);
             CheckTasks(recurranceOptions);
             while (await timer.WaitForNextTickAsync())
             {
+                StartCheck = DateTime.Now;
                 recurranceOptions = taskDA.GetTaskRecurrenceModals();
                 CheckTasks(recurranceOptions);
             }
@@ -41,9 +46,9 @@ namespace TaskChecker
             if (options.FirstOccurrance == null)
                 return;
 
-            DateTime StartDate = options.FirstOccurrance ?? DateTime.Now;
+            DateTime StartDate = options.FirstOccurrance ?? StartCheck;
 
-            if (RoundUp(DateTime.Now.Date + StartDate.TimeOfDay, TimeSpan.FromMinutes(1)) == RoundUp(DateTime.Now.AddMinutes(60), TimeSpan.FromMinutes(1)))
+            if (RoundUp(StartCheck.Date + StartDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
             {
                 Task.Run(async () => await SendEmail(options.TaskID));
             }
@@ -56,14 +61,14 @@ namespace TaskChecker
                 return;
             }
 
-            DateTime startDate = options.FirstOccurrance ?? DateTime.Now;
+            DateTime startDate = options.FirstOccurrance ?? StartCheck;
 
             foreach (char item in options.RecurringDays)
             {
                 DayOfWeek char_day = GetDayFromChar(item);
-                if (DateTime.Now.DayOfWeek == char_day)
+                if (StartCheck.DayOfWeek == char_day)
                 {
-                    if (RoundUp(DateTime.Now.Date + startDate.TimeOfDay, TimeSpan.FromMinutes(1)) == RoundUp(DateTime.Now.AddMinutes(60), TimeSpan.FromMinutes(1)))
+                    if (RoundUp(StartCheck.Date + startDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
                     {
                         Task.Run(async () => await SendEmail(options.TaskID));
                     }
@@ -80,18 +85,18 @@ namespace TaskChecker
                 return;
             }
 
-            DateTime startDate = options.FirstOccurrance ?? DateTime.Now;
+            DateTime startDate = options.FirstOccurrance ?? StartCheck;
 
 
             DateTime WeeklyDate = startDate;
 
             while (true)
             {
-                if (RoundUp(WeeklyDate, TimeSpan.FromDays(7)) > RoundUp(DateTime.Now, TimeSpan.FromDays(7)))
+                if (RoundUp(WeeklyDate, TimeSpan.FromDays(7)) > RoundUp(StartCheck, TimeSpan.FromDays(7)))
                 {
                     return;
                 }
-                if (RoundUp(WeeklyDate, TimeSpan.FromDays(7)) == RoundUp(DateTime.Now, TimeSpan.FromDays(7)))
+                if (RoundUp(WeeklyDate, TimeSpan.FromDays(7)) == RoundUp(StartCheck, TimeSpan.FromDays(7)))
                 {
                     break;
                 }
@@ -103,7 +108,7 @@ namespace TaskChecker
                 DayOfWeek char_day = GetDayFromChar(item);
                 if (DateTime.Now.DayOfWeek == char_day)
                 {
-                    if (RoundUp(DateTime.Now.Date + startDate.TimeOfDay, TimeSpan.FromMinutes(1)) == RoundUp(DateTime.Now.AddMinutes(60), TimeSpan.FromMinutes(1)))
+                    if (RoundUp(StartCheck.Date + startDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
                     {
                         Task.Run(async () => await SendEmail(options.TaskID));
                     }
@@ -118,7 +123,7 @@ namespace TaskChecker
                 return;
             }
 
-            DateTime startDate = options.FirstOccurrance ?? DateTime.Now;
+            DateTime startDate = options.FirstOccurrance ?? StartCheck;
 
             foreach (char item in options.RecurringDays)
             {
@@ -126,7 +131,7 @@ namespace TaskChecker
                 Calendar calendar = CultureInfo.InvariantCulture.Calendar;
                 if (calendar.GetDayOfMonth(DateTime.Now) == char_day)
                 {
-                    if (RoundUp(DateTime.Now.Date + startDate.TimeOfDay, TimeSpan.FromMinutes(1)) == RoundUp(DateTime.Now.AddMinutes(60), TimeSpan.FromMinutes(1)))
+                    if (RoundUp(StartCheck.Date + startDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
                     {
                         Task.Run(async () => await SendEmail(options.TaskID));
                     }
@@ -137,8 +142,8 @@ namespace TaskChecker
 
         void IfNoRecurring(TaskRecurrenceModal options)
         {
-            var startDate = options.FirstOccurrance ?? DateTime.Now;
-            if (RoundUp(startDate, TimeSpan.FromMinutes(1)) == RoundUp(DateTime.Now, TimeSpan.FromMinutes(1)))
+            var startDate = options.FirstOccurrance ?? StartCheck;
+            if (RoundUp(startDate, CheckDelay) == RoundUp(StartCheck, CheckDelay))
             {
                 Task.Run(async () => await SendEmail(options.TaskID));
             }

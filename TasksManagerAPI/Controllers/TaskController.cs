@@ -9,7 +9,12 @@ namespace TasksManagerAPI.Controllers
     [Route("api/[controller]")]
     public class TaskController : ControllerBase
     {
-        private TaskBAL _taskBAL = new TaskBAL();
+        private TaskBAL _taskBAL;
+
+        public TaskController(IConfiguration _config)
+        {
+            _taskBAL = new TaskBAL(_config);
+        }
 
         #region Get
 
@@ -49,8 +54,8 @@ namespace TasksManagerAPI.Controllers
 
         #endregion Post
 
-
         #region Delete
+
         [HttpDelete("DeleteTask/{TaskID:int}")]
         public bool DeleteTask(int TaskID)
         {

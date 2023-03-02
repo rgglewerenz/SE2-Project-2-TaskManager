@@ -23,6 +23,11 @@ namespace TasksManagerAPI.Controllers
             return await _userBAL.TestMailer(to, subject, body);
         }
 
+        [HttpGet("CheckIfUserEmailValid")]
+        public bool CheckIfUserEmailValid(string username)
+        {
+            return _userBAL.CheckIfUserEmailValid(username);
+        }
 
         [HttpGet("AuthUser")]
         public bool AuthUser(string username, string password)
@@ -77,15 +82,15 @@ namespace TasksManagerAPI.Controllers
         }
 
         [HttpPost("ValidateEmail")]
-        public bool ValidateEmail(int userID, string code)
+        public bool ValidateEmail(string code)
         {
-            return _userBAL.ValidateEmail(userID, code);
+            return _userBAL.ValidateEmail(code);
         }
 
         [HttpPost("RequestNewEmailValidationCode")]
-        public async Task<bool> RequestNewEmailValidationCode(int userID)
+        public async Task<bool> RequestNewEmailValidationCode(string username)
         {
-            return await _userBAL.RequestNewEmailValidationCode(userID);
+            return await _userBAL.RequestNewEmailValidationCode(username);
         }
 
         #endregion Post
