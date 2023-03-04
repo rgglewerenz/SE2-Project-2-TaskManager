@@ -20,7 +20,7 @@ namespace TaskChecker
         private readonly UsersDA usersDA;
         private TimeSpan CheckDelay = TimeSpan.FromMinutes(1);
         private DateTime StartCheck = DateTime.Now;
-
+        private Queue<TaskRecurrenceModal> taskQueue;
         public TaskProgram(IConfiguration _config)
         {
 
@@ -31,13 +31,16 @@ namespace TaskChecker
         public async Task Run()
         {
             var recurranceOptions = taskDA.GetTaskRecurrenceModals();
+     
             var timer = new PeriodicTimer(CheckDelay);
             CheckTasks(recurranceOptions);
             while (await timer.WaitForNextTickAsync())
             {
                 StartCheck = DateTime.Now;
                 recurranceOptions = taskDA.GetTaskRecurrenceModals();
+                TaskRecurrenceModal next = new TaskRecurrenceModal();
                 CheckTasks(recurranceOptions);
+                
             }
         }
 
@@ -49,9 +52,7 @@ namespace TaskChecker
             DateTime StartDate = options.FirstOccurrance ?? StartCheck;
 
             if (RoundUp(StartCheck.Date + StartDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
-            {
                 Task.Run(async () => await SendEmail(options.TaskID));
-            }
         }
 
         void IfWeekly(TaskRecurrenceModal options)
@@ -81,9 +82,7 @@ namespace TaskChecker
         void IfBiWeekly(TaskRecurrenceModal options)
         {
             if (options.RecurringDays == null || options.FirstOccurrance == null)
-            {
                 return;
-            }
 
             DateTime startDate = options.FirstOccurrance ?? StartCheck;
 
@@ -92,14 +91,12 @@ namespace TaskChecker
 
             while (true)
             {
+                //If next week's cycle
                 if (RoundUp(WeeklyDate, TimeSpan.FromDays(7)) > RoundUp(StartCheck, TimeSpan.FromDays(7)))
-                {
                     return;
-                }
+                //If this week's cycle
                 if (RoundUp(WeeklyDate, TimeSpan.FromDays(7)) == RoundUp(StartCheck, TimeSpan.FromDays(7)))
-                {
                     break;
-                }
                 WeeklyDate.AddDays(14);
             }
 
@@ -107,21 +104,15 @@ namespace TaskChecker
             {
                 DayOfWeek char_day = GetDayFromChar(item);
                 if (DateTime.Now.DayOfWeek == char_day)
-                {
                     if (RoundUp(StartCheck.Date + startDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
-                    {
                         Task.Run(async () => await SendEmail(options.TaskID));
-                    }
-                }
             }
         }
 
         void IfMonthly(TaskRecurrenceModal options)
         {
             if (options.RecurringDays == null || options.FirstOccurrance == null)
-            {
                 return;
-            }
 
             DateTime startDate = options.FirstOccurrance ?? StartCheck;
 
@@ -130,12 +121,8 @@ namespace TaskChecker
                 int char_day = ((int)item) - 32;
                 Calendar calendar = CultureInfo.InvariantCulture.Calendar;
                 if (calendar.GetDayOfMonth(DateTime.Now) == char_day)
-                {
                     if (RoundUp(StartCheck.Date + startDate.TimeOfDay, CheckDelay) == RoundUp(StartCheck.AddMinutes(60), CheckDelay))
-                    {
                         Task.Run(async () => await SendEmail(options.TaskID));
-                    }
-                }
             }
 
         }
@@ -144,9 +131,7 @@ namespace TaskChecker
         {
             var startDate = options.FirstOccurrance ?? StartCheck;
             if (RoundUp(startDate, CheckDelay) == RoundUp(StartCheck, CheckDelay))
-            {
                 Task.Run(async () => await SendEmail(options.TaskID));
-            }
         }
 
         DateTime RoundUp(DateTime dt, TimeSpan d)
@@ -194,26 +179,25 @@ namespace TaskChecker
         {
             foreach (var item in recurranceOptions)
             {
-                
-                if (item.RecurringType == RecurrentTypes.Weekly)
+                switch (item.RecurringType)
                 {
-                    IfWeekly(item);
-                }
-                if (item.RecurringType == RecurrentTypes.BiWeekly)
-                {
-                    IfBiWeekly(item);
-                }
-                if (item.RecurringType == RecurrentTypes.Monthly)
-                {
-                    IfMonthly(item);
-                }
-                if (item.RecurringType == RecurrentTypes.Daily)
-                {
-                    IfDaily(item);
-                }
-                if (item.RecurringType == RecurrentTypes.Never)
-                {
-                    IfNoRecurring(item);
+                    case RecurrentTypes.Daily:
+                        IfDaily(item);
+                        break;
+                    case RecurrentTypes.Weekly:
+                        IfWeekly(item);
+                        break;
+                    case RecurrentTypes.BiWeekly:
+                        IfBiWeekly(item);
+                        break;
+                    case RecurrentTypes.Monthly:
+                        IfMonthly(item);
+                        break;
+                    case RecurrentTypes.Never:
+                        IfNoRecurring(item);
+                        break;
+                    default:
+                        throw new Exception("Should not get to this point in the switch statment");
                 }
             }
         }

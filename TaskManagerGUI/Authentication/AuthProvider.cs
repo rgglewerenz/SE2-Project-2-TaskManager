@@ -65,6 +65,7 @@ namespace TaskManagerGUI.Authentication
             {
                 return;
             }
+
             var code = await GetInfoString(BaseURL + $"Auth/GetApiCodeForUser/{_user.UserID}");
 
             if (code == null)
