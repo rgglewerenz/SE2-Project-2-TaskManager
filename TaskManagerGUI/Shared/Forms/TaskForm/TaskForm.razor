@@ -1,4 +1,6 @@
-﻿<div class="task-form">
+﻿@inject IOpenAIService openAI
+@inject IJSRuntime js
+<div class="task-form">
 	<EditForm Model="InitialValue" OnValidSubmit="Submit">
 		<DataAnnotationsValidator/>
 		<ValidationSummary />
@@ -16,6 +18,7 @@
 		<div class="form-group">
 			<div class="individual-item">
 				<h4>Description</h4>
+				<button @onclick=GenerateDescription type="button" class="btn btn-outline-primary">Generate Description</button>
 			</div>
 			<div class="individual-item">
 				<textarea placeholder="Enter Description Here" @bind=InitialValue.Description style="width:100%;background-color: var(--secondary-color) !important;color:var(--secondary-background-color)" />
@@ -43,9 +46,16 @@
 </EditForm>
 </div>
 
+<Loader Show="show_load" />
+<ErrorMessageHandler @ref=Handler />
+
 
 
 @code {
+	ErrorMessageHandler Handler;
+
+
+	bool show_load = false;
 	[Parameter] public EventCallback<DTO.TaskTransferModal> OnSubmit { get; set; }
 
 	[Parameter]
@@ -61,4 +71,29 @@
 	{
 		await OnSubmit.InvokeAsync(InitialValue);
 	}
+
+	private async Task GenerateDescription()
+	{
+		if (string.IsNullOrWhiteSpace(InitialValue.Title))
+		{
+			await js.InvokeVoidAsync("alert", "Task Title can not be empty");
+			return;
+		}
+		show_load = true;
+		await InvokeAsync(StateHasChanged);
+		try
+		{
+			var str = await openAI.GetDescriptionForTaskByTitle(InitialValue.Title);
+
+			InitialValue.Description = str;
+		}catch(Exception ex)
+		{
+			Handler.ShowMessage(ex.Message);
+		}
+
+
+		show_load = false;
+		await InvokeAsync(StateHasChanged);
+	}
+
 }

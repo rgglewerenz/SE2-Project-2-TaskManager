@@ -13,7 +13,7 @@ namespace DatabaseInterop.Models.Mapping
             this.HasKey(t => t.TaskID);
 
             this.Property(t => t.Title).IsRequired().HasMaxLength(50);
-            this.Property(t => t.Description).IsRequired().HasMaxLength(250);
+            this.Property(t => t.Description).IsRequired().HasMaxLength(500);
 
             this.ToTable("Tasks");
             this.Property(t => t.TaskID).HasColumnName("TaskID");

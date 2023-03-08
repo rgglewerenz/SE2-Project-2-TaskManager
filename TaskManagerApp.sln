@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseEnums", "DatabaseEn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emailer", "Emailer\Emailer.csproj", "{66B00A19-965B-4FEF-B7E5-F17CE5979D23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskChecker", "TaskChecker\TaskChecker.csproj", "{7CBBB69B-8F71-4828-A583-CC61DA302DDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskChecker", "TaskChecker\TaskChecker.csproj", "{7CBBB69B-8F71-4828-A583-CC61DA302DDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

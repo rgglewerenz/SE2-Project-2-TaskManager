@@ -1,0 +1,26 @@
+﻿<div class="description-container @(DescriptionContainerCSS)">
+    @if(Description.Length > 40)
+    {
+        <h8>
+            @Description
+        </h8>
+        <br/>
+        <a @onclick="(() => ShowAll = !ShowAll)">@ShowToggleText</a>
+    }
+    else
+    {
+        <h8>
+            @Description
+        </h8>
+    }
+</div>
+
+@code {
+    private bool ShowAll = false;
+
+    private string ShowToggleText => ShowAll ? "Show Few" : "Show All";
+
+    private string DescriptionContainerCSS => ShowAll ? "ShowAll" : "";
+
+    [Parameter] public string Description { get; set; }
+}

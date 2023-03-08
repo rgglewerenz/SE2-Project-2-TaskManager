@@ -51,7 +51,7 @@ namespace TaskManagerGUI.Authentication
                 if((await localStorage.GetAsync<string>("ApiAuthToken")).Success && _user == null)
                 {
                     var code = await localStorage.GetAsync<string>("ApiAuthToken");
-                    _user = await GetInfoFromJson<UserTransferModal>(BaseURL + $"Auth/GetUserByApiCode?Code={code.Value}");
+                    _user = await GetInfoFromJson<UserTransferModal>(BaseURL + $"Auth/GetUserByApiCode?Code={HttpUtility.UrlEncode(code.Value)}");
                 }
             }catch(Exception ex)
             {

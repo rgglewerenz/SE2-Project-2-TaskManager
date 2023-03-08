@@ -1,0 +1,16 @@
+﻿.description-container {
+    margin: 10px 5px 5px 10px;
+    display:block;
+}
+
+.ShowFew {
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+    text-overflow: ellipsis;
+}
+
+a {
+    display:block;
+    color: #808080 !important;
+}

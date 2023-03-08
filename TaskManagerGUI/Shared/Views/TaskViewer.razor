@@ -8,7 +8,9 @@
 
 <div class="task-container">
     <h2>@Value.Title</h2>
-    <h8>@Value.Description</h8>
+    
+    <DescriptionViewer Description="@Value.Description" />
+
     <div class="button-container-struct">
         <div class="button-container">
             <button class="btn btn-warning" @onclick=ToEdit> Edit </button>
@@ -16,13 +18,15 @@
         <div class="button-container">
             <button class="btn btn-danger" @onclick=ToDelete> Delete </button>
         </div>
-        
     </div>
-    
-
 </div>
 
+<Loader Show=Show />
+
+
 @code{
+    private bool Show = false;
+
     [Parameter]
     public TaskTransferModal Value { get; set; }
 
@@ -34,8 +38,14 @@
 
     private async Task ToDelete()
     {
-        TaskServ.DeleteTask(Value.TaskID);
+        Show = true;
+        await InvokeAsync(StateHasChanged);
+        
+        await TaskServ.DeleteTask(Value.TaskID);
 
+        Show = false;
+        await InvokeAsync(StateHasChanged);
+        
         NavMan.NavigateTo(NavMan.Uri, true);
     }
 

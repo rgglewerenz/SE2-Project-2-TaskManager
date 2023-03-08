@@ -15,7 +15,7 @@ namespace DTO
 
 		public string Title { get; set; } = "";
 		[Required]
-		[StringLength(150, ErrorMessage = "Description must be less than 150 characters")]
+		[StringLength(500, ErrorMessage = "Description must be less than 500 characters")]
 		public string Description { get; set; } = "";
         public TaskRecurrenceTransferModal? recurrenceOptions { get; set; }
     }

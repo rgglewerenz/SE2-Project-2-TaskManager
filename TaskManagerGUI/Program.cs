@@ -20,7 +20,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
-builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddSingleton<ITaskService, TaskService>();
+builder.Services.AddSingleton<IOpenAIService, OpenAIService>();
 
 
 if (HybridSupport.IsElectronActive)

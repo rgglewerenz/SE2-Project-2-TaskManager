@@ -44,6 +44,21 @@ namespace TaskChecker
             }
         }
 
+        public async Task GenerateQueue()
+        {
+            var item = taskDA.GetTaskRecurrenceModals();
+            item.Sort((item1, item2) => Compare(item1, item2));
+            item.ForEach((x) => taskQueue.Enqueue(x));
+        }
+
+        int Compare(TaskRecurrenceModal a, TaskRecurrenceModal b)
+        {
+            return (a == null && b == null) ? 0
+                : (a == null) ? -1
+                : (b == null) ? 1
+                : a.FirstOccurrance.Value.CompareTo(a.FirstOccurrance.Value);
+        }
+
         void IfDaily(TaskRecurrenceModal options)
         {
             if (options.FirstOccurrance == null)
@@ -201,6 +216,5 @@ namespace TaskChecker
                 }
             }
         }
-
     }
 }
