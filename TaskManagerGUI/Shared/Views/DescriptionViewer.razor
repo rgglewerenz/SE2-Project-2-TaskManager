@@ -20,7 +20,7 @@
 
     private string ShowToggleText => ShowAll ? "Show Few" : "Show All";
 
-    private string DescriptionContainerCSS => ShowAll ? "ShowAll" : "";
+    private string DescriptionContainerCSS => ShowAll ? "" : "ShowFew";
 
     [Parameter] public string Description { get; set; }
 }
