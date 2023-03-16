@@ -14,4 +14,16 @@
     <ProjectReference Include="..\DatabaseInterop\DatabaseInterop.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Templates\TaskReminder.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\ValidateEmail.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\Passreset.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

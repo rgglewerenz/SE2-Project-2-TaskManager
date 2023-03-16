@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace DataAcess
@@ -408,6 +409,23 @@ namespace DataAcess
         {
             var user = GetUserTransferByUsername(username);
             return user.IsValid;
+        }
+
+        public async Task<bool> TestPassResetEmail(string to)
+        {
+            try
+            {
+                await _emailer.SendTaskReminderEmail(to, new TaskModal()
+                {
+                    Description = "Test Description",
+                    Title = "Test Title"
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

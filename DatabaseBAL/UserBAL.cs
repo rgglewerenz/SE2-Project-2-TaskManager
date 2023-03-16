@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DatabaseBAL
 {
@@ -109,6 +110,11 @@ namespace DatabaseBAL
         public bool CheckIfUserEmailValid(string username)
         {
             return _usersDA.CheckIfUserEmailValid(username);
+        }
+
+        public async Task<bool> TestPassResetEmail(string to)
+        {
+            return await _usersDA.TestPassResetEmail(to);
         }
 
         #endregion Auth

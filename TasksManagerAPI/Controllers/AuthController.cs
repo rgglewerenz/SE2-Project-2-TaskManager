@@ -23,6 +23,12 @@ namespace TasksManagerAPI.Controllers
             return await _userBAL.TestMailer(to, subject, body);
         }
 
+        [HttpGet("TestPassResetEmail")]
+        public async Task<bool> TestPassResetEmail(string to)
+        {
+            return await _userBAL.TestPassResetEmail(to);
+        }
+
         [HttpGet("CheckIfUserEmailValid")]
         public bool CheckIfUserEmailValid(string username)
         {

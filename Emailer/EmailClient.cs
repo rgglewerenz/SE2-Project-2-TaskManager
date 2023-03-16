@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
+using System.Web;
 
 namespace Emailer
 {
@@ -54,10 +56,19 @@ namespace Emailer
 
         public async Task SendPasswordResetEmail(string to, string code)
         {
+            var tags = new Dictionary<string, string>()
+            {
+                {"$code", HttpUtility.UrlEncode(code) },
+                {"$BaseApplicationUrl", BaseApplicationUrl }
+            };
+
+            var body_html = ReplaceTags(await GetFileContent("Passreset.html"),  tags);
+
+
             var message = new MailMessage()
             {
                 From = new MailAddress(_credentials.Email),
-                Body = $"<div style=\"text-align=center;\"><h4>Hello, it seems as if you have reqested a new password.<br/>Please click the button below to change the password on your account.</h4><a href=\"{BaseApplicationUrl}/ForgotPassword/{code}\">click me</a></div>",
+                Body = body_html,
                 IsBodyHtml = true,
                 Subject = "Password Reset",
             };
@@ -69,10 +80,19 @@ namespace Emailer
 
         public async Task SendEmailValidationEmail(string to, string code)
         {
+            var tags = new Dictionary<string, string>()
+            {
+                {"$code", HttpUtility.UrlEncode(code) },
+                {"$BaseApplicationUrl", BaseApplicationUrl }
+            };
+
+            var body_html = ReplaceTags(await GetFileContent("ValidateEmail.html"), tags);
+
+
             var message = new MailMessage()
             {
                 From = new MailAddress(_credentials.Email),
-                Body = $"<div style=\"text-align=center;\"><h4>Hello, it seems as if you have created a new account.<br/>Please click the link below to activate your account.</h4><a href=\"{BaseApplicationUrl}/EmailValidation/{code}\">validate now</a></div>",
+                Body = body_html,
                 IsBodyHtml = true,
                 Subject = "Welcome to your new account",
             };
@@ -99,12 +119,17 @@ namespace Emailer
 
         public async Task SendTaskReminderEmail(string to, TaskModal taskInfo)
         {
+            var tags = new Dictionary<string, string>()
+            {
+                {"$Description", taskInfo.Description }
+            };
+
+            var body_html = ReplaceTags(await GetFileContent("TaskReminder.html"), tags);
+
             var message = new MailMessage()
             {
                 From = new MailAddress(_credentials.Email),
-                Body = $"<div style=\"text-align=center;\"><h4>Hello, it seems as if a task's due date is in 1 hour.<br/>" +
-                $"Here is the description for the task {taskInfo.Description}.</h4>" +
-                $"</div>",
+                Body = body_html,
                 IsBodyHtml = true,
                 Subject = $"Upcomming task {taskInfo.Title}",
             };
@@ -112,6 +137,22 @@ namespace Emailer
             message.To.Add(to);
 
             await _smtpClient.SendMailAsync(message);
+        }
+
+        public async Task<string> GetFileContent(string fileName)
+        {
+            var loc = System.IO.Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString();
+
+            return await File.ReadAllTextAsync(loc + "/Templates/" + fileName);
+        }
+
+        public string ReplaceTags(string content, Dictionary<string, string> tagPairs)
+        {
+            foreach(var item in tagPairs)
+            {
+                content = content.Replace(item.Key, item.Value);
+            }
+            return content;
         }
     }
 }
