@@ -415,11 +415,7 @@ namespace DataAcess
         {
             try
             {
-                await _emailer.SendTaskReminderEmail(to, new TaskModal()
-                {
-                    Description = "Test Description",
-                    Title = "Test Title"
-                });
+                await _emailer.SendPasswordResetEmail(to, "TestCode");
                 return true;
             }
             catch (Exception ex)
