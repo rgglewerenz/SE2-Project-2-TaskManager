@@ -2,11 +2,7 @@
 using DatabaseInterop.Models;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
-<<<<<<< HEAD
-using Microsoft.Extensions.Logging;
 
-=======
->>>>>>> parent of 54d5002 (Added in a better landing page)
 
 namespace TasksManagerAPI.Controllers
 {
