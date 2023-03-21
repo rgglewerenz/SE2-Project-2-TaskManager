@@ -3,7 +3,6 @@ using DatabaseInterop.Models;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Tools;
 
 
 namespace TasksManagerAPI.Controllers
