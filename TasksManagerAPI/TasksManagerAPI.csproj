@@ -17,6 +17,7 @@
     <ProjectReference Include="..\DatabaseBAL\DatabaseBAL.csproj" />
     <ProjectReference Include="..\DatabaseInterop\DatabaseInterop.csproj" />
     <ProjectReference Include="..\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Tools\Tools.csproj" />
   </ItemGroup>
 
 </Project>
