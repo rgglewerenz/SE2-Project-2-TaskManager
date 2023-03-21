@@ -30,6 +30,7 @@ namespace TaskChecker
 
         public async Task Run()
         {
+            taskQueue = new Queue<TaskRecurrenceModal>();
             var recurranceOptions = taskDA.GetTaskRecurrenceModals();
      
             var timer = new PeriodicTimer(CheckDelay);
