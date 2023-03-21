@@ -14,9 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAcess\DataAcess.csproj" />
-    <ProjectReference Include="..\DatabaseBAL\DatabaseBAL.csproj" />
-    <ProjectReference Include="..\DatabaseEnums\DatabaseEnums.csproj" />
-    <ProjectReference Include="..\DatabaseInterop\DatabaseInterop.csproj" />
   </ItemGroup>
 
   <ItemGroup>
