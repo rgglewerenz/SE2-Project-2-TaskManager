@@ -2,8 +2,11 @@
 using DatabaseInterop.Models;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 using Microsoft.Extensions.Logging;
 
+=======
+>>>>>>> parent of 54d5002 (Added in a better landing page)
 
 namespace TasksManagerAPI.Controllers
 {
@@ -12,7 +15,6 @@ namespace TasksManagerAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserBAL _userBAL;
-
 
         public AuthController(IConfiguration _config) {
             _userBAL = new UserBAL(_config);
