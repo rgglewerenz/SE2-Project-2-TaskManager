@@ -2,7 +2,6 @@
 using DatabaseInterop.Models;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 
 namespace TasksManagerAPI.Controllers
@@ -12,7 +11,6 @@ namespace TasksManagerAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserBAL _userBAL;
-
 
         public AuthController(IConfiguration _config) {
             _userBAL = new UserBAL(_config);

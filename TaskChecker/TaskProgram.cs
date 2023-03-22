@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using DatabaseEnums;
 using Microsoft.Extensions.Configuration;
 using DatabaseBAL;
-using System.Runtime.CompilerServices;
 
 namespace TaskChecker
 {
@@ -22,7 +21,6 @@ namespace TaskChecker
         private TimeSpan CheckDelay = TimeSpan.FromMinutes(1);
         private DateTime StartCheck = DateTime.Now;
         private Queue<TaskRecurrenceModal> taskQueue;
-
         public TaskProgram(IConfiguration _config)
         {
 
@@ -32,6 +30,7 @@ namespace TaskChecker
 
         public async Task Run()
         {
+            taskQueue = new Queue<TaskRecurrenceModal>();
             var recurranceOptions = taskDA.GetTaskRecurrenceModals();
      
             var timer = new PeriodicTimer(CheckDelay);
@@ -48,7 +47,6 @@ namespace TaskChecker
 
         public async Task GenerateQueue()
         {
-            taskQueue = new Queue<TaskRecurrenceModal>();
             var item = taskDA.GetTaskRecurrenceModals();
             item.Sort((item1, item2) => Compare(item1, item2));
             item.ForEach((x) => taskQueue.Enqueue(x));
