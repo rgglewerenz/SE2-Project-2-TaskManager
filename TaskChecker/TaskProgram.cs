@@ -47,6 +47,7 @@ namespace TaskChecker
 
         public async Task GenerateQueue()
         {
+            taskQueue = new Queue<TaskRecurrenceModal>();
             var item = taskDA.GetTaskRecurrenceModals();
             item.Sort((item1, item2) => Compare(item1, item2));
             item.ForEach((x) => taskQueue.Enqueue(x));
