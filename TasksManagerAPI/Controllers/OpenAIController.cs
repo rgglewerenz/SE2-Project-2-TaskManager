@@ -23,8 +23,7 @@ namespace TasksManagerAPI.Controllers
                 Temperature = 0.2,
                 Model = OpenAI_API.Models.Model.DavinciText,
                 Prompt = $"Based on the title of a task create a paragraph (less than 500 characters) inference about the task's purpose. Task title: {title}.",
-                MaxTokens = 200,
-                
+                MaxTokens = 200
             };
             var result = await _openAIApi.Completions.CreateCompletionAsync(request);
             return result.ToString();
