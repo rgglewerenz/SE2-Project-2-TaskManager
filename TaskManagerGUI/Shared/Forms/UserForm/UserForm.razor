@@ -1,14 +1,13 @@
 ﻿<div class="task-form">
     <EditForm Model="InitialValue" OnValidSubmit="Submit">
 		<DataAnnotationsValidator />
-		<ValidationSummary />
         <div class="form-group">
             <div class="individual-item" style="text-align:center;width: 100%;">
                 <h4>@Title</h4>
             </div>
         </div>
 
-
+         
         <div class="form-group">
 			<div class="individual-item">
 				<h6>Username</h6>
@@ -17,7 +16,10 @@
                 <input type="text" style="width:100%;" placeholder="Enter Username Here" @bind=InitialValue.UserName />
 			</div>
 		</div>
+        <ValidationMessage For="@(() => InitialValue.UserName)" />
 
+
+        
         <div class="form-group">
 			<div class="individual-item">
 				<h6>Email</h6>
@@ -26,7 +28,10 @@
                 <input type="text" style="width:100%;" placeholder="Enter Email Here" @bind=InitialValue.Email />
 			</div>
 		</div>
+        <ValidationMessage For="@(() => InitialValue.Email)" />
 
+
+        
         <div class="form-group">
             <div class="individual-item" style="display:flex; justify-content:space-between;">
                 <h6>Password</h6> <div><h10>Show Password</h10><input type="checkbox" @bind=show_pass /></div>
@@ -35,9 +40,11 @@
                 <input type="@PasswordType" style="width:100%;" placeholder="Enter Password Here" @bind=InitialValue.Password />
             </div>
         </div>
+       <ValidationMessage For="@(() => InitialValue.Password)" />
+
+
 
         
-
         <div class="form-group">
             <div class="individual-item">
                 <h6>Age</h6>
@@ -46,6 +53,8 @@
                 <input type="number" style="width:100%;" @bind=InitialValue.Age />
             </div>
         </div>
+        <ValidationMessage For="@(() => InitialValue.Age)" />
+        
 
         <div class="form-group" style="display:flex;justify-content:center;width: 100%;">
             <button type="submit" class="btn btn-outline-primary">
@@ -81,6 +90,7 @@
         await InvokeAsync(StateHasChanged);
         if(InitialValue.Age < 18)
             Handler.ShowMessage("You must be 18 or older to create an account");
+
         else if (CheckPassComplexity(InitialValue.Password))
             await OnSubmit.InvokeAsync(InitialValue);
         else
