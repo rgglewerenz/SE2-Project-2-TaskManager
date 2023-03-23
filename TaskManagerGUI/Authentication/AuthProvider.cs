@@ -82,7 +82,7 @@ namespace TaskManagerGUI.Authentication
             await localStorage.DeleteAsync("ApiAuthToken");
         }
 
-        public async Task CreateAccount(UserTransferModal userInfo, string password)
+        public async Task CreateAccount(CreateUserTransferModal userInfo)
         {
             if (!pingApi)
             {
@@ -99,13 +99,7 @@ namespace TaskManagerGUI.Authentication
                 throw new Exception("An account with this username/email already exists");
             }
 
-            var result = await PostInfo<dynamic, bool>(
-                BaseURL + 
-                $"Auth/CreateUser?username={HttpUtility.UrlEncode(userInfo.UserName)}&" +
-                $"password={HttpUtility.UrlEncode(password)}&" +
-                $"age={userInfo.Age}&" +
-                $"email={HttpUtility.UrlEncode(userInfo.Email)}"
-                , new { });
+            var result = await PostInfo<CreateUserTransferModal, bool>(BaseURL + "Auth/CreateUser", userInfo);
 
             var item = result;
 

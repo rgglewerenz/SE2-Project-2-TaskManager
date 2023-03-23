@@ -76,15 +76,16 @@ namespace TasksManagerAPI.Controllers
 
         #region Post
 
+        
         [HttpPost("CreateUser")]
-        public async Task<bool> CreateUser(string username, string password, int age, string email) {
+        public async Task<bool> CreateUser([FromBody] CreateUserTransferModal _modal) {
             UserModal new_user = new UserModal()
             {
-                Age= age,
-                Email= email,
-                UserName= username,
+                Age= _modal.Age,
+                Email= _modal.Email,
+                UserName= _modal.UserName,
             };
-            new_user.CreatePasswordHash(password);
+            new_user.CreatePasswordHash(_modal.Password);
             return await _userBAL.AddUser(new_user);
         }
 

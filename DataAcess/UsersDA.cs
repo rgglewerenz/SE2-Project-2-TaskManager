@@ -292,6 +292,11 @@ namespace DataAcess
                                   where code == PassReset.Code
                                   select PassReset).FirstOrDefault();
 
+            if(pass_reset == null)
+            {
+                throw new Exception($"No code matching {code} has been found");
+            }
+
             if (pass_reset != null && pass_reset.CreationDate.AddMinutes(60) < DateTime.Now)
             {
                 UnitOfWork.PasswordResetRepository.Delete(pass_reset);

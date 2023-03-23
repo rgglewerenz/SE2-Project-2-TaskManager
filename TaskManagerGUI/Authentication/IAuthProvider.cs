@@ -11,7 +11,7 @@ namespace TaskManagerGUI.Authentication
         public Task<bool> CheckAuth(string username, string password, ProtectedLocalStorage localStorage);
         Task<bool> CheckIfUserEmailValid(string username);
         public Task CheckLocalStorage(ProtectedLocalStorage localStorage);
-        Task CreateAccount(UserTransferModal userInfo, string password);
+        Task CreateAccount(CreateUserTransferModal userInfo);
         public Task Logout(ProtectedLocalStorage localStorage);
         public Task PutInLocalStorage(ProtectedLocalStorage localStorage);
         Task RequestNewEmailValidationCode(string username);
