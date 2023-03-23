@@ -61,13 +61,12 @@
 <ErrorMessageHandler @ref=Handler />
 
 @code {
-    [Parameter] public EventCallback<(DTO.UserTransferModal, string)> OnSubmit { get; set; }
+    [Parameter] public EventCallback<DTO.CreateUserTransferModal> OnSubmit { get; set; }
     [Parameter] public string Title { get; set; } = "Enter Title Here";
 
     ErrorMessageHandler Handler;
 
-    private DTO.UserTransferModal InitialValue = new DTO.UserTransferModal();
-    private string password = "";
+    private DTO.CreateUserTransferModal InitialValue = new DTO.CreateUserTransferModal();
     private string? error_message;
     private bool show_pass = false;
     private bool showLoading = false;
@@ -82,8 +81,8 @@
         await InvokeAsync(StateHasChanged);
         if(InitialValue.Age < 18)
             Handler.ShowMessage("You must be 18 or older to create an account");
-        else if (CheckPassComplexity(password))
-            await OnSubmit.InvokeAsync((InitialValue, password));
+        else if (CheckPassComplexity(InitialValue.Password))
+            await OnSubmit.InvokeAsync(InitialValue);
         else
             Handler.ShowMessage(error_message??"Unknown Error");
         showLoading = false;

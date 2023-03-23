@@ -4,7 +4,7 @@
 @inject NavigationManager navMan
 
 
-<TaskManagerGUI.Shared.Forms.UserForm.UserForm OnSubmit="@Test" Title="Create Account"/>
+<TaskManagerGUI.Shared.Forms.UserForm.UserForm OnSubmit="@Submit" Title="Create Account" />
 
 
 <ErrorMessageHandler @ref=Handler />
@@ -12,16 +12,11 @@
 @code {
     ErrorMessageHandler Handler;
 
-    private async Task Test((DTO.UserTransferModal, string ) items)
-    {
-        await Submit(items.Item1, items.Item2);
-    }
-
-    private async Task Submit(DTO.UserTransferModal userInfo, string password)
+    private async Task Submit(DTO.CreateUserTransferModal userInfo)
     {
         try
         {
-            await iauth.CreateAccount(userInfo, password);
+            await iauth.CreateAccount(userInfo);
             navMan.NavigateTo("/Login");
         }catch(Exception ex)
         {
