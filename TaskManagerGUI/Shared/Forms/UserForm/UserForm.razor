@@ -55,8 +55,11 @@
 
 	</EditForm>
 </div>
+
 <Loader Show=showLoading />
+
 <ErrorMessageHandler @ref=Handler />
+
 @code {
     [Parameter] public EventCallback<(DTO.UserTransferModal, string)> OnSubmit { get; set; }
     [Parameter] public string Title { get; set; } = "Enter Title Here";
@@ -107,4 +110,5 @@
         }
         return true;
     }
+
 }

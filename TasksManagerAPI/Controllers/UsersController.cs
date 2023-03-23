@@ -21,8 +21,6 @@ namespace TasksManagerAPI.Controllers
         [HttpGet("GetUsers")]
         public List<UserTransferModal> GetUsers()
         {
-
-            var host = Dns.GetHostEntry(Dns.GetHostName());
             return _userBAL.GetTransferModalUsers();
         }
 
