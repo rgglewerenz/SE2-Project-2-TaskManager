@@ -10,7 +10,7 @@ namespace DTO
     public class CreateUserTransferModal
     {
         [Required]
-        [StringLength(20, MinimumLength =5, ErrorMessage = "Username must be shorter then 20 characters, but greater than 5")]
+        [StringLength(20, MinimumLength =5, ErrorMessage = "Username must be between 5, and 20 characters long")]
         public string UserName { get; set; } = "";
         [Required]
         [EmailAddress]
@@ -22,7 +22,7 @@ namespace DTO
 
         [Required]
         [PasswordValidation]
-        [StringLength(30, MinimumLength = 10, ErrorMessage = "Password must be shorter then 30 characters, but greater then 10 characters")]
+        [StringLength(30, MinimumLength = 10, ErrorMessage = "Password must be between 10, and 30 characters long")]
         public string Password { get; set; }
 
     };

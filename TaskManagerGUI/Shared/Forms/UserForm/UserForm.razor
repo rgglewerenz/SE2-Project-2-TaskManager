@@ -13,7 +13,7 @@
 				<h6>Username</h6>
 			</div>
 			<div class="individual-item">
-                <input type="text" style="width:100%;" placeholder="Enter Username Here" @bind=InitialValue.UserName />
+                <InputText type="text" style="width:100%;" placeholder="Enter Username Here" @bind-Value=InitialValue.UserName />
 			</div>
 		</div>
         <ValidationMessage For="@(() => InitialValue.UserName)" />
@@ -25,24 +25,22 @@
 				<h6>Email</h6>
 			</div>
 			<div class="individual-item">
-                <input type="text" style="width:100%;" placeholder="Enter Email Here" @bind=InitialValue.Email />
+                <InputText type="text" style="width:100%;" placeholder="Enter Email Here" @bind-Value=InitialValue.Email />
 			</div>
 		</div>
         <ValidationMessage For="@(() => InitialValue.Email)" />
 
-
+           
         
         <div class="form-group">
             <div class="individual-item" style="display:flex; justify-content:space-between;">
                 <h6>Password</h6> <div><h10>Show Password</h10><input type="checkbox" @bind=show_pass /></div>
             </div>
             <div class="individual-item">
-                <input type="@PasswordType" style="width:100%;" placeholder="Enter Password Here" @bind=InitialValue.Password />
+                <InputText type="@PasswordType" style="width:100%;" placeholder="Enter Password Here" @bind-Value=InitialValue.Password />
             </div>
         </div>
        <ValidationMessage For="@(() => InitialValue.Password)" />
-
-
 
         
         <div class="form-group">
@@ -50,7 +48,7 @@
                 <h6>Age</h6>
             </div>
             <div class="individual-item">
-                <input type="number" style="width:100%;" @bind=InitialValue.Age />
+                <InputNumber type="number" style="width:100%;" @bind-Value=InitialValue.Age />
             </div>
         </div>
         <ValidationMessage For="@(() => InitialValue.Age)" />
