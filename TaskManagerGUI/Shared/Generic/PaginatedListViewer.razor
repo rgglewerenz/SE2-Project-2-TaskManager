@@ -17,10 +17,11 @@
     [Parameter] public RenderFragment<T> ChildFragment { get; set; } 
     [Parameter] public int PageSize { get; set; } = 5;
     [Parameter] public int Radius { get; set; } = 2;
+    [Parameter] public int FirstPage { get; set; } = 1;
 
     protected override async  Task OnParametersSetAsync()
     {
-        SelectedPage(1);
+        SelectedPage(FirstPage);
         await base.OnParametersSetAsync();
     }
 

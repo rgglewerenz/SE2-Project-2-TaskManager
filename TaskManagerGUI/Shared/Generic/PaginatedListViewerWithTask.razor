@@ -21,17 +21,17 @@
     [Parameter] public int Radius { get; set; } = 2;
     [Parameter] public Func<int, Task<List<T>>> GetPage { get; set; }
     [Parameter] public Func<Task<int>> GetTotalPage { get; set; }
-    [Parameter] public Loader Loader { get; set; }
-
+    [Parameter] public int FirstPage { get; set; } = 1;
 
     private bool show;
+
     private int TotalAmtPageResult;
 
     protected override async Task OnParametersSetAsync()
     {
         await ShowLoader();
         TotalAmtPageResult = await GetTotalPage();
-        await SelectedPage(1);
+        await SelectedPage(FirstPage);
         await base.OnParametersSetAsync();
         await HideLoader();
     }
@@ -39,7 +39,6 @@
     private List<T> DisplayedResults = new List<T>();
 
     private int CurrPage = 1;
-
 
     async Task SelectedPage(int i)
     {
