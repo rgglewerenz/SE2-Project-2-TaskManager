@@ -376,12 +376,14 @@ namespace DataAcess
             {
                 throw new Exception($"Unable to find the code {code}");
             }
+            
             if (codeModel.CreationDate.AddDays(7) < DateTime.Now)
             {
                 UnitOfWork.ApiAuthCodeRepository.Delete(codeModel);
                 UnitOfWork.Save();
                 throw new Exception($"The code {code} has expired");
             }
+
             var user = GetUserByID(codeModel.UserID);
             return GetUserTransferByUsername(user.UserName);
         }

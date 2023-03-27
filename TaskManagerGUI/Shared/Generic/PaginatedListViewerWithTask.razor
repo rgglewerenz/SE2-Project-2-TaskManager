@@ -1,0 +1,71 @@
+﻿@typeparam T
+@inject IJSRuntime js
+
+<div class="list-container">
+    @foreach (var item in DisplayedResults)
+    {
+        <div class="list-item">
+            @ChildFragment(item)
+        </div>
+    }
+</div>
+
+<GenericPagination CurrentPage="CurrPage" SelectedPage="SelectedPage" TotalAmountPages="TotalAmtPageResult" Radius="Radius" />
+
+<Loader Show=show />
+
+
+@code {
+    [Parameter] public RenderFragment<T> ChildFragment { get; set; }
+    [Parameter] public int PageSize { get; set; } = 5;
+    [Parameter] public int Radius { get; set; } = 2;
+    [Parameter] public Func<int, Task<List<T>>> GetPage { get; set; }
+    [Parameter] public Func<Task<int>> GetTotalPage { get; set; }
+    [Parameter] public Loader Loader { get; set; }
+
+
+    private bool show;
+    private int TotalAmtPageResult;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ShowLoader();
+        TotalAmtPageResult = await GetTotalPage();
+        await SelectedPage(1);
+        await base.OnParametersSetAsync();
+        await HideLoader();
+    }
+
+    private List<T> DisplayedResults = new List<T>();
+
+    private int CurrPage = 1;
+
+
+    async Task SelectedPage(int i)
+    {
+
+        await ShowLoader();
+        CurrPage = i;
+        DisplayedResults = await GetPage(i);
+        await InvokeAsync(ScrollToTopOfPage);
+        await HideLoader();
+    }
+
+    private async Task ScrollToTopOfPage()
+    {
+        await js.InvokeVoidAsync("scrollToTop");
+    }
+
+    private async Task ShowLoader()
+    {
+        show = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HideLoader()
+    {
+        show = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

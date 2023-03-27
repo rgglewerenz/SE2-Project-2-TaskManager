@@ -14,3 +14,12 @@ a {
     display:block;
     color: #808080 !important;
 }
+
+
+#show-toggler :hover{
+    cursor:pointer;
+    background:red !important;
+}
+
+#show-toggler {
+}

@@ -10,7 +10,7 @@
     }
 </div>
 
-<GenericPagination CurrentPage="CurrPage" SelectedPage="SelectedPage" TotalAmountPages="(int)Math.Floor((double)Items.Count/PageSize)" Radius="Radius"/>
+<GenericPagination CurrentPage="CurrPage" SelectedPage="SelectedPage" TotalAmountPages="(int)Math.Ceiling(((double)(Items.Count)/PageSize))" Radius="Radius"/>
 
 @code {
     [Parameter] public List<T> Items { get; set; } = new List<T>();

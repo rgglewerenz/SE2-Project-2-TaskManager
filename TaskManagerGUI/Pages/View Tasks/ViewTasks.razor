@@ -6,11 +6,11 @@
 @using TaskManagerGUI.Shared.Generic;
 @using DTO;
 
-<PaginatedListViewer T="TaskTransferModal" PageSize="10" Items="@items">
+<PaginatedListViewerWithTask T="TaskTransferModal" PageSize="PageSize" GetTotalPage="GetTotalPageCount" GetPage="GetPageTasks">
     <ChildFragment>
         <TaskViewer Value="@context" />
     </ChildFragment>
-</PaginatedListViewer>
+</PaginatedListViewerWithTask>
 
 
 <Loader Show="@show_load" />
@@ -18,7 +18,8 @@
 @code {
     private bool show_load;
 
-    private List<TaskTransferModal> items = new List<TaskTransferModal>();
+    const int PageSize = 5;
+
 
     protected override async Task OnAfterRenderAsync(bool first)
     {
@@ -33,11 +34,26 @@
                 await InvokeAsync(StateHasChanged);
                 return;
             }
-            items = await TaskServ.GetTasks(AuthProvider.UserInfo.UserID);
             await InvokeAsync(StateHasChanged);
             show_load = false;
             await InvokeAsync(StateHasChanged);
         }
-        
     }
+
+    private async Task<int> GetTotalPageCount()
+    {
+        if (AuthProvider.UserInfo == null)
+            return 0;
+
+        var items = await TaskServ.GetTasks(AuthProvider.UserInfo.UserID);
+        return (int)Math.Ceiling(((double)(items.Count) / PageSize));
+    }
+
+    private async Task<List<TaskTransferModal>> GetPageTasks(int page)
+    {
+        if (AuthProvider.UserInfo == null)
+            return new List<TaskTransferModal>();
+        return (await TaskServ.GetTasks(AuthProvider.UserInfo.UserID)).Skip((page - 1) * PageSize).Take(PageSize).ToList();
+    }
+
 }

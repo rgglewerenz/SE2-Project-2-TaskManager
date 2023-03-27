@@ -1,4 +1,4 @@
-﻿<nav aria-label="Page Navigation Example">
+﻿<nav>
     <ul class="pagination justify-content-center">
         @if(links != null)
         {
@@ -46,7 +46,7 @@
 
     private void LoadPages()
     {
-        if(TotalAmountPages < 1)
+        if(TotalAmountPages < 2)
         {
             return;
         }
