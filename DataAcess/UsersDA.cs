@@ -5,6 +5,7 @@ using Emailer;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -422,7 +423,12 @@ namespace DataAcess
         {
             try
             {
-                await _emailer.SendPasswordResetEmail(to, "TestCode");
+                await _emailer.SendTaskReminderEmail(to, new TaskModal()
+                {
+                    Description = "<script>alert(1)</script>",
+                    Title = "Test",
+                    TaskID = 1
+                });
                 return true;
             }
             catch (Exception ex)

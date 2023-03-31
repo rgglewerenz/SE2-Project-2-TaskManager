@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Web;
+using Ganss.XSS;
 
 namespace Emailer
 {
@@ -148,9 +149,9 @@ namespace Emailer
 
         public string ReplaceTags(string content, Dictionary<string, string> tagPairs)
         {
-            foreach(var item in tagPairs)
+            foreach (var item in tagPairs)
             {
-                content = content.Replace(item.Key, item.Value);
+                content = content.Replace(item.Key, HttpUtility.HtmlEncode(item.Value)); 
             }
             return content;
         }

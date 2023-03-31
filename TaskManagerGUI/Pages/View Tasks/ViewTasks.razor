@@ -1,5 +1,4 @@
 ﻿@page "/ViewTasks"
-@page "/ViewTasks/{startpage:int}"
 @inject ITaskService TaskServ
 @inject IAuthProvider AuthProvider
 @inject NavigationManager navMan;
@@ -7,6 +6,7 @@
 @inject ProtectedLocalStorage BrowserStorage
 @using TaskManagerGUI.Shared.Generic;
 @using DTO;
+@using Microsoft.AspNetCore.WebUtilities;
 
 <PaginatedListViewerWithTask T="TaskTransferModal" PageSize="PageSize" GetTotalPage="GetTotalPageCount" GetPage="GetPageTasks" FirstPage="startPage">
     <ChildFragment>
@@ -30,6 +30,18 @@
             startPage = 1;
 
         return base.OnInitializedAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+
+        var uri = navMan.ToAbsoluteUri(navMan.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("startPage", out var startPage))
+        {
+            this.startPage = Convert.ToInt32(startPage);
+        }
+
+        await base.OnParametersSetAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool first)
@@ -62,7 +74,7 @@
 
     private async Task<List<TaskTransferModal>> GetPageTasks(int page)
     {
-        navMan.NavigateTo($"/ViewTasks/{page}#");
+        navMan.NavigateTo($"/ViewTasks?startPage={page}");
 
         if (AuthProvider.UserInfo == null)
             return new List<TaskTransferModal>();
