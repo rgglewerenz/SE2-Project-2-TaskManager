@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;

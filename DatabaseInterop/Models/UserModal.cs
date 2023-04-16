@@ -56,5 +56,17 @@ namespace DatabaseInterop.Models
                 Email = user.Email,
             };
         }
+
+        //Used for converting transfermodals to base usermodals
+        public static explicit operator UserModal(UserTransferModal user)
+        {
+            return new UserModal()
+            {
+                Age = user.Age,
+                Email = user.Email,
+                UserID = user.UserID,
+                UserName = user.UserName,
+            };
+        }
     }
 }
